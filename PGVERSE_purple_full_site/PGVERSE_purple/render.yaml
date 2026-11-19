@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: pgverse-simulator
+    runtime: node
+    plan: starter
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATA_DIR
+        value: /var/data
+    disk:
+      name: pgverse-storage
+      mountPath: /var/data
+      sizeGB: 1

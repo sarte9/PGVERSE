@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#08060d" />
+  <title>PG//VERSE — Neon Edition</title>
+  <style>
+    :root{
+      --bg:#0b101d;--bg2:#10192b;--panel:#151f31;--panel2:#1b2840;--line:#29374c;
+      --text:#f6f7ff;--muted:#8c9bb5;--lime:#c7f34a;--cyan:#54e4ff;--pink:#ff5fa2;
+      --purple:#b795ff;--gold:#ffce61;--danger:#ff7387;--shadow:0 17px 44px rgba(0,0,0,.22)
+    }
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,"Segoe UI",Arial,sans-serif;min-height:100vh}
+    body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse 55% 40% at 50% -13%,#23365d77,transparent 75%),linear-gradient(90deg,#ffffff04 1px,transparent 1px),linear-gradient(#ffffff04 1px,transparent 1px);background-size:auto,35px 35px,35px 35px}
+    button{font:inherit;cursor:pointer}button:disabled{cursor:not-allowed;opacity:.48}button:focus-visible,a:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+    .app{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100vh;max-width:1800px;margin:0 auto}.sidebar{padding:27px 17px 20px;display:flex;flex-direction:column;border-right:1px solid #273248;position:sticky;top:0;height:100vh;background:#0e1523ee;backdrop-filter:blur(15px)}
+    .logo{display:flex;align-items:center;gap:12px;padding:4px 10px 31px}.logo-block{width:39px;height:39px;flex:0 0 39px;background:var(--lime);display:grid;place-items:center;transform:rotate(-12deg);box-shadow:5px 5px 0 #607c19;color:#101b13;font-size:31px;font-weight:1000}.logo-block span{transform:rotate(12deg)}.logo-title{font-size:19px;font-weight:1000;letter-spacing:-1px}.logo-title b{color:var(--lime)}.logo-sub{font-size:9px;letter-spacing:2.6px;color:var(--muted);margin-top:4px;font-weight:850}
+    .side-label{color:#64738e;font-size:10px;letter-spacing:2.2px;font-weight:900;padding:0 14px;margin:2px 0 12px}.nav{display:grid;gap:7px}.nav-btn{width:100%;text-align:left;border:1px solid transparent;background:transparent;color:#94a2bd;padding:13px 14px;display:flex;gap:13px;align-items:center;border-radius:11px;font-weight:800;font-size:13px;transition:.17s}.nav-btn:hover{background:#202c40;color:white}.nav-btn.active{background:#c7f34a16;color:var(--lime);border-color:#c7f34a42}.nav-ico{font-size:21px;width:24px;text-align:center;line-height:1}.nav-count{font-size:10px;color:#0d141f;background:var(--lime);border-radius:5px;padding:3px 6px;margin-left:auto}
+    .side-bottom{margin-top:auto}.notice{font-size:11px;line-height:1.65;border:1px solid #304158;background:#172338;border-radius:12px;padding:14px;color:#91a0ba;margin-bottom:15px}.notice strong{color:var(--cyan)}.profile{display:flex;align-items:center;gap:11px;padding:12px;background:#1a2538;border-radius:12px}.pfp{width:37px;height:37px;background:#7c6cf5;border:3px solid #968cfc;display:grid;place-items:center;font-size:20px;border-radius:7px}.profile strong{font-size:12px}.profile small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+    .main{min-width:0;padding:0 31px 40px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;height:84px;border-bottom:1px solid #253249;margin-bottom:28px}.breadcrumb{font-size:12px;letter-spacing:1.3px;color:#7f8da9;font-weight:900;text-transform:uppercase}.breadcrumb b{color:var(--lime)}.top-stats{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.stat-chip{background:#1b283c;border:1px solid #314057;border-radius:10px;display:flex;align-items:center;gap:10px;padding:9px 14px;white-space:nowrap;font-size:14px;font-weight:900}.stat-chip small{color:var(--muted);font-size:10px;letter-spacing:.9px;font-weight:800;display:block}.stat-chip .coin{font-size:21px}.chip-level{color:var(--cyan)}
+    .view{display:none;animation:slideup .23s ease}.view.active{display:block}@keyframes slideup{from{opacity:.25;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .heading{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:22px}.eyebrow{color:var(--lime);font-size:11px;font-weight:950;letter-spacing:2.7px;text-transform:uppercase;margin-bottom:8px}.heading h1{font-size:clamp(27px,3vw,41px);line-height:1.07;letter-spacing:-1.7px;margin:0 0 10px;font-weight:1000}.heading h1 em{color:var(--lime);font-style:normal}.sub{color:var(--muted);font-size:13px;line-height:1.7;margin:0;max-width:660px}.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid #3a4b61;background:#1b283d;color:#b1c0d5;border-radius:8px;padding:9px 12px;font-size:11px;font-weight:900;letter-spacing:.7px;white-space:nowrap}.dot{height:7px;width:7px;background:var(--lime);display:inline-block;border-radius:50%;box-shadow:0 0 10px #c7f34a77}
+    .overview{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:17px}.metric{border:1px solid var(--line);background:#162235;border-radius:13px;padding:18px 19px;position:relative;overflow:hidden}.metric:after{content:"";position:absolute;right:-20px;top:-32px;width:90px;height:90px;border:14px solid #ffffff06;transform:rotate(20deg)}.metric-tag{color:var(--muted);font-size:10px;font-weight:900;letter-spacing:1.2px;text-transform:uppercase}.metric-num{margin-top:11px;font-size:29px;font-weight:1000;letter-spacing:-1px}.metric-desc{font-size:11px;color:#8191ad;margin-top:5px}.metric:nth-child(1) .metric-num{color:var(--lime)}.metric:nth-child(2) .metric-num{color:var(--cyan)}.metric:nth-child(3) .metric-num{color:var(--purple)}.metric:nth-child(4) .metric-num{color:var(--gold)}
+    .dashboard-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(285px,1fr);gap:17px}.panel{background:#151f31;border:1px solid #304057;border-radius:16px;box-shadow:var(--shadow);overflow:hidden}.panel-inner{padding:22px}.section-kicker{color:#cdd8ed;font-size:11px;font-weight:950;letter-spacing:1.9px;display:flex;align-items:center;gap:8px}.section-kicker .square{width:8px;height:8px;background:var(--lime);transform:rotate(15deg)}
+    .terminal{background:radial-gradient(circle at 75% 20%,#3f4a7966,transparent 42%),linear-gradient(125deg,#233657,#1b2643 65%,#1c2140);border:1px solid #506084;position:relative;overflow:hidden}.terminal:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 96%,#ffffff08 96%),linear-gradient(transparent 96%,#ffffff08 96%);background-size:24px 24px;pointer-events:none}.terminal>*{position:relative}.terminal-top{display:flex;justify-content:space-between;align-items:center;gap:10px}.mini-badge{font-size:9px;font-weight:1000;letter-spacing:1.6px;border:1px solid #93f58b65;color:#bcffaf;border-radius:6px;padding:7px 9px;background:#4dfa5613}.target-box{display:flex;align-items:center;gap:22px;margin:30px 0 25px}.avatar{width:100px;height:110px;position:relative;flex:0 0 100px;filter:drop-shadow(8px 9px 0 #080f2555)}.avatar-head{position:absolute;width:68px;height:62px;top:0;left:16px;border-radius:9px;background:#f3d07f;border:4px solid #1c2444;box-shadow:inset -12px -7px 0 #d9ae5b}.avatar-head:before,.avatar-head:after{content:"";position:absolute;top:24px;width:7px;height:8px;background:#18243b;border-radius:1px}.avatar-head:before{left:16px}.avatar-head:after{right:16px}.avatar-mouth{position:absolute;top:41px;left:27px;width:11px;height:4px;background:#18243b}.avatar-body{position:absolute;left:8px;top:59px;background:#68d5ed;width:84px;height:47px;border:4px solid #1c2444;box-shadow:inset -13px -5px 0 #348fac}.avatar-body:before,.avatar-body:after{content:"";position:absolute;top:2px;width:15px;height:35px;background:#f0c977;border:4px solid #1c2444}.avatar-body:before{left:-21px}.avatar-body:after{right:-21px}.target-info{min-width:0}.target-info small{color:#9cacd4;font-size:10px;font-weight:900;letter-spacing:1.5px}.target-info h2{font-size:clamp(23px,2.5vw,36px);font-weight:1000;letter-spacing:-1.2px;margin:7px 0;word-break:break-word}.target-info p{color:#abb9da;font-size:12px;margin:0}.target-info b{color:var(--lime)}
+    .progress-top{display:flex;justify-content:space-between;font-size:11px;font-weight:900;letter-spacing:1px;color:#c7d4ec;margin-bottom:9px}.progress-track{height:12px;border-radius:5px;background:#0c1830;border:1px solid #4b5e83;overflow:hidden;padding:2px}.progress-fill{height:100%;width:0;background:repeating-linear-gradient(90deg,var(--lime) 0 15px,#a8cf33 15px 18px);box-shadow:0 0 13px #c7f34a88;transition:width .1s linear;border-radius:2px}.console{height:89px;overflow:hidden;background:#0b1428ad;border:1px solid #55648366;border-radius:9px;padding:12px 14px;margin:16px 0;font-family:Consolas,"Courier New",monospace;font-size:11px;line-height:1.9;color:#a5badc}.console b{color:var(--lime)}.console .logdim{color:#7891b3}.console .good{color:#65f2ca}.console .bad{color:#ff8da5}
+    .primary{border:none;background:var(--lime);color:#132013;font-weight:1000;text-transform:uppercase;letter-spacing:.7px;border-radius:9px;box-shadow:0 5px 0 #789328;min-height:48px;padding:12px 19px;transition:transform .12s,filter .12s}.primary:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.06)}.primary:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 #789328}.secondary{border:1px solid #526584;background:#24344e;color:#eef5ff;font-weight:900;border-radius:9px;padding:11px 16px;min-height:44px;transition:.15s}.secondary:hover:not(:disabled){background:#354967}.ghost{border:1px solid #3b4d65;background:#1a283b;color:#d9e6ff;border-radius:8px;padding:9px 12px;font-size:11px;font-weight:900}.ghost:hover:not(:disabled){background:#243650}.action-line{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.action-line .primary{flex:1}.hint{font-size:10px;color:#b0bed6;text-align:center;margin-top:13px}
+    .tier-list{padding:11px 0 2px}.tier{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #293851}.tier:last-child{border:0}.tier-icon{height:39px;width:39px;display:grid;place-items:center;background:#23334b;border:1px solid #45556d;border-radius:9px;font-size:21px;flex:0 0 39px}.tier strong{display:block;font-size:12px}.tier small{display:block;color:#8193ae;font-size:10px;margin-top:4px}.tier .odds{margin-left:auto;font-size:12px;color:#aab8cd;font-weight:850}.rarity-common{--rar:#88bbcf}.rarity-uncommon{--rar:#8bed9a}.rarity-rare{--rar:#70b4ff}.rarity-epic{--rar:#bd96ff}.rarity-legendary{--rar:#ffd265}.rarity-mythic{--rar:#ff78b7}.rar-text{color:var(--rar)!important}.rar-border{border-color:color-mix(in srgb,var(--rar),#334059 55%)!important}
+    .bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:17px}.mini-header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}.mini-header h3{font-size:15px;margin:0}.mini-header span{font-size:11px;color:var(--muted)}.quest{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid #2b3850}.quest:last-child{border:0}.quest-ico{font-size:22px;width:35px}.quest-body{flex:1;min-width:0}.quest-body strong{display:block;font-size:12px}.quest-body small{display:block;color:var(--muted);font-size:10px;margin-top:5px}.quest .ghost{white-space:nowrap;padding:8px 10px}.progress-mini{height:5px;margin-top:8px;background:#2c3a51;border-radius:6px;overflow:hidden}.progress-mini div{height:100%;background:var(--lime);border-radius:6px}.feed{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid #29364c}.feed:last-child{border:0}.feed-dot{font-size:18px}.feed-body{font-size:11px;line-height:1.5;color:#b7c7df;flex:1}.feed-body strong{color:#f1f5ff}.feed-body small{display:block;color:#7588a7;font-size:10px;margin-top:2px}.empty{padding:27px;text-align:center;color:var(--muted);font-size:12px;line-height:1.7;border:1px dashed #42516c;background:#1b294066;border-radius:12px}.empty .big{font-size:37px;display:block;margin-bottom:9px}
+    .intro-strip{background:linear-gradient(105deg,#243654,#202944);border:1px solid #495d83;border-radius:13px;padding:14px 18px;display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:18px}.intro-strip strong{display:block;font-size:13px;margin-bottom:4px}.intro-strip small{font-size:11px;line-height:1.5;color:#b2c1dc}.intro-strip .strip-icon{font-size:30px}
+    .upgrade-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.upgrade-card{border:1px solid #32445e;background:#17233a;border-radius:15px;padding:22px;display:flex;flex-direction:column;min-height:257px}.upgrade-card .upicon{font-size:36px;width:58px;height:58px;display:grid;place-items:center;background:#2c3a56;border:1px solid #425a7a;border-radius:12px}.upgrade-card h3{margin:19px 0 7px;font-size:17px}.upgrade-card p{font-size:12px;line-height:1.6;color:var(--muted);margin:0 0 18px;min-height:56px}.upgrade-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto}.level-dots{font-size:10px;color:var(--lime);font-weight:900;margin-top:7px}.upgrade-footer button{font-size:11px;padding:10px 12px;min-height:38px}.upgrade-footer .price{font-weight:1000;font-size:14px;color:var(--gold)}
+    .account-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.account-card{position:relative;background:linear-gradient(140deg,#202d44,#152034);border:1px solid #45526b;border-radius:13px;padding:18px;overflow:hidden}.account-card:before{content:"";position:absolute;right:-18px;top:-22px;height:85px;width:85px;border:15px solid var(--rar);opacity:.065;transform:rotate(25deg)}.acc-top{display:flex;align-items:center;justify-content:space-between;gap:9px}.rar-label{border:1px solid var(--rar);color:var(--rar);padding:5px 7px;border-radius:5px;font-size:9px;font-weight:1000;letter-spacing:1px}.avatar-small{font-size:31px;margin-top:21px}.account-card h3{font-size:15px;margin:7px 0 4px;overflow-wrap:anywhere}.account-card .acc-desc{font-size:11px;color:#899bb8;line-height:1.6}.acc-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:20px}.acc-foot b{font-size:14px;color:var(--gold)}.acc-foot button{font-size:10px;padding:9px 11px}
+    .market-split{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(260px,.7fr);gap:16px;align-items:start}.market-split .account-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.count-label{color:#889ab3;font-size:12px;font-weight:800}
+    .leak-grid{display:grid;grid-template-columns:1.35fr .9fr;gap:16px}.leak-hero{border:1px solid #596590;background:radial-gradient(circle at 85% 4%,#7545ba44,transparent 48%),linear-gradient(145deg,#272a54,#1b2440);padding:25px;border-radius:16px}.leak-hero .lock-icon{font-size:48px;margin:20px 0 15px}.leak-hero h2{font-size:26px;margin:0 0 10px;letter-spacing:-.7px}.leak-hero p{font-size:12px;line-height:1.8;color:#b7c1e1;max-width:520px}.leak-feature{font-size:11px;color:#a1f5e5;letter-spacing:.3px;margin:9px 0}.leak-data{font-family:Consolas,monospace;padding:15px;background:#0e1834;border:1px solid #536b9e;border-radius:10px;color:#a9beec;font-size:11px;line-height:2;margin:21px 0;overflow:hidden;white-space:pre-wrap}.leak-data b{color:#78f5c7}.leak-hero .primary{width:100%;max-width:450px}.scan-card{padding:23px;border:1px solid #374b65;background:#1a2942;border-radius:15px}.scan-card h3{margin:0 0 10px;font-size:17px}.scan-card p{font-size:12px;color:#9aacc7;line-height:1.7}.scan-card .scan-effect{margin:24px 0;padding:20px;text-align:center;background:#243650;border:1px dashed #4c6483;border-radius:11px}.scan-effect strong{display:block;font-size:26px;color:var(--cyan)}.scan-effect small{display:block;font-size:10px;color:#adbedd;margin-top:7px}
+    .achievements{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:19px}.achievement{background:#1b2940;border:1px solid #394c68;border-radius:12px;padding:17px;opacity:.55}.achievement.unlocked{opacity:1;border-color:#74884a;background:#293441}.achievement .ai{font-size:27px;margin-bottom:10px}.achievement b{display:block;font-size:12px}.achievement small{display:block;color:#93a4ba;font-size:10px;margin-top:5px;line-height:1.5}
+    .toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin:0 0 14px}.toolbar h2{font-size:16px;margin:0}.toolbar-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.select{border:1px solid #465978;background:#1c2c45;color:#d4e3ff;border-radius:8px;padding:10px 13px;min-height:40px;font-size:11px;font-weight:800;outline:none}.panel-note{font-size:11px;line-height:1.6;color:#98a8c1;margin-top:13px}
+    #toastStack{position:fixed;bottom:25px;right:25px;display:grid;gap:9px;z-index:99;pointer-events:none}.toast{width:min(340px,calc(100vw - 30px));background:#22334c;border:1px solid #65806b;border-left:5px solid var(--lime);box-shadow:0 12px 35px #0007;padding:13px 16px;border-radius:9px;font-size:12px;line-height:1.6;font-weight:800;animation:toastin .2s ease}.toast.warn{border-left-color:var(--pink)}@keyframes toastin{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+    .modal-wrap{display:none;position:fixed;inset:0;background:#07101cbb;z-index:90;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px)}.modal-wrap.open{display:flex}.modal{background:linear-gradient(140deg,#293f58,#151f33);border:1px solid #657a9c;border-radius:20px;padding:28px;width:min(430px,100%);box-shadow:0 28px 90px #0009;text-align:center}.modal .reward-em{font-size:60px;display:block;margin:12px}.modal h2{font-size:24px;margin:0 0 10px}.modal p{font-size:12px;color:#b0c1da;line-height:1.7}.modal .reward-price{font-size:26px;color:var(--gold);font-weight:1000;margin:15px 0}.modal .primary{width:100%}.footer{color:#6f829d;font-size:10px;line-height:1.6;margin-top:24px;text-align:center;letter-spacing:.3px}
+    @media(max-width:1250px){.app{grid-template-columns:205px minmax(0,1fr)}.sidebar{padding:23px 12px}.main{padding:0 20px 30px}.dashboard-grid{grid-template-columns:1.35fr 1fr}.overview{grid-template-columns:repeat(2,1fr)}.account-grid,.upgrade-grid{grid-template-columns:repeat(2,1fr)}.market-split{grid-template-columns:1fr}.market-split>.panel:nth-child(2){order:2}}
+    @media(max-width:900px){.app{display:block}.sidebar{height:auto;position:sticky;top:0;z-index:60;padding:12px 15px;border-right:0;border-bottom:1px solid #35435a}.logo{padding:0;gap:7px}.logo-block{width:30px;height:30px;flex-basis:30px;font-size:22px;box-shadow:3px 3px 0 #607c19}.logo-title{font-size:15px}.logo-sub,.side-label,.side-bottom{display:none}.nav{display:flex;overflow:auto;gap:5px;padding:10px 0 0}.nav-btn{white-space:nowrap;padding:9px 11px;font-size:11px;gap:6px;justify-content:center}.nav-ico{font-size:15px;width:auto}.nav-count{display:none}.main{padding:0 15px 35px}.topbar{height:auto;padding:15px 0;margin-bottom:20px}.breadcrumb{font-size:10px}.stat-chip{padding:7px 9px;font-size:12px}.dashboard-grid,.bottom-grid,.leak-grid{grid-template-columns:1fr}.heading h1{font-size:30px}.target-box{margin:23px 0}.intro-strip .strip-icon{display:none}}
+    @media(max-width:580px){.topbar{flex-wrap:wrap}.top-stats{width:100%;justify-content:space-between}.top-stats .stat-chip{flex:1}.heading{display:block}.heading .pill{margin-top:11px}.overview,.account-grid,.upgrade-grid,.achievements{grid-template-columns:1fr 1fr;gap:9px}.metric{padding:13px}.metric-num{font-size:23px}.metric-tag{font-size:9px}.account-grid,.upgrade-grid{grid-template-columns:1fr}.terminal .panel-inner{padding:17px}.target-box{gap:12px}.avatar{transform:scale(.8);transform-origin:left center;flex-basis:77px}.target-info h2{font-size:23px}.action-line{flex-direction:column;align-items:stretch}.action-line button{width:100%}.panel-inner{padding:17px}.achievement{padding:12px}.footer{font-size:9px}#toastStack{right:15px;bottom:14px}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+    /* LeakCheck: central play loop */
+    .nav-btn[data-tab="leak"]{font-weight:950}
+    .leak-guide{background:linear-gradient(100deg,#273955,#172e40);border:1px solid #47638a;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;margin-bottom:17px}
+    .guide-symbol{height:44px;width:44px;flex:0 0 44px;border-radius:10px;background:#c7f34a21;border:1px solid #c7f34a88;display:grid;place-items:center;font-size:24px}
+    .leak-guide strong{display:block;font-size:13px;color:#f8fcff;margin-bottom:5px}.leak-guide small{font-size:11px;color:#a9bad5;line-height:1.65}
+    .check-layout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(258px,.85fr);align-items:start;gap:16px}
+    .check-panel{background:#131f31;border:1px solid #425476;border-radius:17px;overflow:hidden;box-shadow:var(--shadow)}
+    .check-top{padding:17px 20px;background:#1d2c45;border-bottom:1px solid #3e5271;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .check-top strong{font-size:12px;letter-spacing:1.7px}.check-top small{color:#9fb1ce;font-size:10px}
+    .log-toolbar{display:flex;gap:10px;align-items:center;padding:12px 18px;background:#111e32;border-bottom:1px solid #2f4261;font-size:10px;color:#849cb9;flex-wrap:wrap}
+    .log-toolbar .indicator{background:#bcf54c1c;border:1px solid #bcf54c6b;border-radius:6px;padding:6px 9px;color:#cef79e;font-weight:900;letter-spacing:.6px}
+    .sim-log{padding:15px;min-height:330px;max-height:430px;overflow:auto;background:radial-gradient(circle at 0 0,#223d5a77,transparent 50%),#0d192b;font-family:Consolas,Menlo,Monaco,monospace}
+    .sim-log-header{font-size:10px;color:#7e95b4;margin:0 0 13px;padding:7px 9px;background:#182a42;border-left:3px solid #8b9fbb;line-height:1.65;white-space:pre-wrap}
+    .log-row{border:1px solid #2b405b;background:#15263c;margin:7px 0;padding:9px 11px;border-radius:7px;display:grid;grid-template-columns:48px minmax(0,1fr);column-gap:10px;row-gap:4px;line-height:1.5}
+    .log-no{font-size:10px;color:#687e9d;font-weight:900;padding-top:1px}.log-domain{font-size:11px;color:#97c5f1;word-break:break-all}.log-domain b{color:#8999b1}.log-user{grid-column:2;font-size:10px;color:#bdcce1;word-break:break-word}.log-user b{color:#8195b2;font-weight:700}
+    .log-row.highlight{background:#283e39;border-color:#b4e774;box-shadow:inset 3px 0 0 #c7f34a}.log-row.highlight .log-domain{color:#c7f34a}
+    .log-placeholder{min-height:288px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:11px;text-align:center;color:#aabeda;font-size:13px}.log-placeholder span{font-size:45px}
+    .check-bottom{padding:20px;border-top:1px solid #314560;background:#192840}
+    .check-bottom label{display:block;font-size:11px;font-weight:950;color:#d4e5fb;letter-spacing:1px;margin-bottom:9px}
+    .check-entry{display:flex;gap:9px}.check-entry input{width:100%;min-width:0;flex:1;color:#fff;border:1px solid #546a8d;background:#0e1b2e;border-radius:9px;padding:12px 14px;font:600 14px Consolas,monospace;outline:none}.check-entry input:focus{border-color:var(--lime);box-shadow:0 0 0 3px #c7f34a22}.check-entry .primary{flex:0 0 auto;font-size:11px;box-shadow:none}
+    .log-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.log-actions .secondary{flex:1}.log-actions .ghost{min-height:44px}
+    .check-feedback{padding-top:13px;min-height:31px;font-size:12px;font-weight:850;color:#8ea7c7;line-height:1.6}.check-feedback.success{color:#a8f49b}.check-feedback.error{color:#ff9cac}.check-feedback.info{color:#a9d5ff}
+    .check-side{display:grid;gap:15px}.check-side .panel-inner{padding:19px}.check-side h3{font-size:15px;margin:0 0 15px}.session-stats{display:grid;grid-template-columns:1fr 1fr;gap:9px}.session-stat{border:1px solid #334764;background:#1b2c45;border-radius:9px;padding:13px}.session-stat strong{display:block;color:#c7f34a;font-size:23px;font-weight:1000}.session-stat small{display:block;color:#92a6c0;font-size:10px;margin-top:4px;line-height:1.5}.side-tips{font-size:11px;line-height:1.8;color:#a9bad3}.side-tips b{color:#d9f99a}.side-step{padding:11px 0;border-bottom:1px solid #30425c}.side-step:last-child{border:0}.side-step .number{display:inline-grid;place-items:center;width:24px;height:24px;background:#293e53;color:var(--lime);border:1px solid #6f985d;border-radius:6px;margin-right:9px;font-size:11px;font-weight:1000}
+    .sim-pill{font-size:10px;color:#b5cbe9;border:1px solid #506786;background:#20334e;padding:6px 9px;border-radius:6px}
+    .cta-panel{min-height:310px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:30px;background:radial-gradient(circle at 80% 20%,#557f7944,transparent 48%),linear-gradient(130deg,#203753,#162940);border:1px solid #435b7b;border-radius:16px}
+    .cta-panel .cta-em{font-size:53px;margin-bottom:13px}.cta-panel h2{font-size:28px;line-height:1.2;margin:0 0 12px}.cta-panel p{color:#b1c2de;font-size:13px;line-height:1.8;margin:0 0 20px;max-width:510px}.cta-panel .primary{min-width:200px}
+    @media(max-width:1000px){.check-layout{grid-template-columns:1fr}.check-side{grid-template-columns:1fr 1fr}}
+    @media(max-width:620px){.leak-guide{padding:13px}.check-side{grid-template-columns:1fr}.check-entry{flex-direction:column}.check-entry .primary{width:100%}.check-bottom{padding:14px}.log-toolbar{padding:9px}.sim-log{padding:10px;max-height:420px}.log-actions .secondary{flex:1 1 100%}.log-actions .ghost{flex:1}.log-row{grid-template-columns:34px minmax(0,1fr);padding:8px}.check-top{padding:14px}}
+
+    /* NPC database & two-step fictional credential puzzle */
+    .targets-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+    .target-card{background:linear-gradient(140deg,#223049,#141e31);border:1px solid #384c67;border-radius:15px;padding:17px;box-shadow:0 10px 24px #0002;min-width:0;transition:transform .15s,border-color .15s}
+    .target-card:hover{transform:translateY(-2px);border-color:#73965b}
+    .npc-top{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;font-size:9px;font-weight:900}
+    .npc-tag{color:#d7f99d;letter-spacing:1px}.npc-state{background:#29334a;border-radius:5px;color:#94a6c3;padding:5px 6px}.npc-state.npc-scanned{color:#a8e4ff;background:#1e4054}
+    .npc-avatar{width:58px;height:58px;border:2px solid #536988;border-radius:11px;background:linear-gradient(145deg,#3b516c,#27364d);display:grid;place-items:center;font-size:33px;margin:22px 0 15px;box-shadow:5px 5px 0 #0c1524}
+    .target-card h3{font-size:16px;overflow-wrap:anywhere;margin:0 0 9px}.target-card p{font-size:11px;line-height:1.7;color:#8fa6bf;margin:0 0 20px}
+    .npc-actions{display:flex;gap:8px}.npc-actions .primary{flex:1;min-height:42px;padding:8px;font-size:10px;box-shadow:0 3px 0 #789328}.npc-actions .ghost{font-size:16px}
+    .workflow-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.workflow-grid>div{background:#1e2c44;border:1px solid #354c6b;padding:18px;border-radius:10px;display:flex;flex-direction:column;gap:8px}.workflow-grid span{color:var(--lime);font-weight:1000;font-size:21px}.workflow-grid b{font-size:13px}.workflow-grid small{font-size:11px;color:#98a9c4;line-height:1.65}
+    .scan-start{padding:20px;border-bottom:1px solid #385071;background:linear-gradient(120deg,#2c395b,#1b3445)}
+    .scan-caption{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:13px}.scan-caption strong{font-size:12px;letter-spacing:1px}.scan-caption .ghost{margin-left:auto;font-size:10px}
+    .scan-step{background:var(--lime);color:#18230d;padding:6px 7px;font-size:9px;font-weight:1000;letter-spacing:.6px;border-radius:5px}
+    .scan-target-info{color:#a9c5d9;font-size:11px;margin-top:12px;line-height:1.5}
+    .credential-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+    .credential-grid input{width:100%;min-width:0;color:#fff;border:1px solid #546a8d;background:#0e1b2e;border-radius:9px;padding:12px 14px;font:600 13px Consolas,monospace;outline:none}
+    .credential-grid input:focus{border-color:var(--lime)}.pass-input{display:flex;gap:5px}.pass-input .ghost{flex-shrink:0}
+    .log-row .pass-text{color:#d4c1ff}.inventory-pass{display:flex;align-items:center;gap:5px;background:#0c192b;border:1px solid #395071;border-radius:7px;padding:6px 8px;margin-top:11px;min-width:0}.inventory-pass span{font-size:9px;color:#b0bfe0;white-space:nowrap}.inventory-pass code{font-size:10px;overflow-wrap:anywhere;min-width:0;flex:1;color:#d3f19c}.inventory-pass .ghost{padding:4px 6px}
+    [hidden]{display:none!important}
+    @media(max-width:1330px){.targets-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media(max-width:950px){.targets-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:580px){.targets-grid{grid-template-columns:1fr 1fr;gap:9px}.target-card{padding:12px}.npc-avatar{width:49px;height:49px;font-size:26px;margin:15px 0}.target-card h3{font-size:13px}.npc-actions{flex-wrap:wrap}.npc-actions .primary{font-size:9px}.workflow-grid{grid-template-columns:1fr}.credential-grid{grid-template-columns:1fr}.check-entry{flex-wrap:wrap}.check-entry .primary{width:100%}.scan-start{padding:15px}}
+    /* v6: Roblox themed loot and creator donation */
+    .donate-button{color:#cfff93;background:linear-gradient(115deg,#284b36,#173c38);border:1px solid #6b9e70;border-radius:10px;min-height:43px;padding:10px 13px;display:flex;align-items:center;justify-content:center;gap:9px;text-decoration:none;font-size:12px;font-weight:950;box-shadow:0 6px 17px #0002;transition:background .2s,transform .2s}
+    .donate-button:hover{background:#346149;transform:translateY(-1px)}.donate-sidebar{margin:17px 4px 20px}.donate-mobile{display:none}
+    .loot-catalog-intro{color:#a5b6d2;line-height:1.65;font-size:11px;margin:0 0 15px}.loot-catalog-intro b{color:var(--lime)}
+    .loot-catalog{display:grid;gap:14px}.loot-section{border:1px solid #364c66;background:#1b2b42;border-radius:10px;padding:10px 11px}
+    .loot-section-head{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;padding:2px 0 8px;border-bottom:1px solid #344963;font-size:10px}.loot-section-head span{color:#879bb8;font-size:9px}
+    .loot-entry{display:flex;align-items:center;gap:10px;color:#d8e5f8;font-size:11px;font-weight:750;padding:8px 0;border-bottom:1px solid #ffffff0b}.loot-entry:last-child{border-bottom:0}
+    .loot-entry-icon{display:grid;place-items:center;background:#263a53;border:1px solid #455c76;border-radius:8px;width:30px;height:30px;font-size:19px;flex:0 0 30px}
+    .loot-avatar{margin-top:16px;display:grid;place-items:center;width:67px;height:67px;font-size:39px;background:linear-gradient(135deg,#3b4e6f,#23334d);border:1px solid #5a7593;border-radius:13px;box-shadow:5px 5px 0 #101b2b}
+    .loot-caption{font-size:9px;color:var(--lime);letter-spacing:1.4px;font-weight:900;margin-top:16px}
+    .account-card .loot-name{font-size:16px;line-height:1.3;margin:6px 0;min-height:20px}.loot-owner{color:#d3dfef;font-size:11px;margin:4px 0 8px;overflow-wrap:anywhere}
+    @media(max-width:900px){.donate-sidebar{display:none}.donate-mobile{display:flex}.topbar{flex-wrap:wrap}}
+    @media(max-width:580px){.donate-mobile{font-size:11px;min-height:36px;padding:8px}.market-split .account-grid{grid-template-columns:1fr}}
+    /* v7: accessible language switcher, responsive alongside the header stats */
+    .language-picker{display:flex;align-items:center;gap:8px;color:#becfe5;font-size:11px;font-weight:900;letter-spacing:.2px;white-space:nowrap;margin-left:auto}
+    .language-picker select{max-width:155px;min-height:39px;border:1px solid #506587;background:#1b2a40;color:#e6f3ff;font:700 12px Inter,"Segoe UI",Arial,sans-serif;padding:8px 10px;border-radius:9px;cursor:pointer}
+    .language-picker select:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
+    @media(max-width:1200px){.topbar{height:auto;min-height:84px;flex-wrap:wrap;padding:13px 0;gap:10px}.language-picker{margin-left:0}.top-stats{margin-left:auto}}
+    @media(max-width:600px){.language-picker{order:2;flex:1 0 auto;justify-content:flex-start}.top-stats{order:3;width:100%;margin-left:0;justify-content:flex-start}.topbar{gap:9px}.stat-chip{padding:7px 9px;font-size:12px}.stat-chip .coin{font-size:17px}.language-picker select{max-width:145px}.donate-mobile{margin-left:auto}}
+
+/* PG//VERSE 8 visual refresh */
+:root{--bg:#080d19;--panel:#111d30;--lime:#ceff4d;--shadow:0 18px 52px rgba(0,0,0,.33)}
+body:before{background:radial-gradient(ellipse 53% 36% at 45% -7%,#385b8559,transparent 80%),radial-gradient(ellipse 29% 44% at 98% 48%,#422c7650,transparent 80%),linear-gradient(90deg,#ffffff05 1px,transparent 1px),linear-gradient(#ffffff05 1px,transparent 1px);background-size:auto,auto,42px 42px,42px 42px}
+.logo-block{background:linear-gradient(135deg,#e4ff84,#a6dd2f);box-shadow:5px 5px 0 #537b20}.sidebar{background:#0c1425ef}.nav-btn.active{background:linear-gradient(90deg,#cef94e26,#cef94e08);border-color:#d8ff564c}.primary{background:linear-gradient(120deg,#e0ff7c,#b3ee37)}
+.heading h1{letter-spacing:-2.1px}.heading .eyebrow{color:#d0fa80}.panel,.target-card,.metric,.upgrade-card,.account-card{box-shadow:0 15px 35px #00000019;transition:border-color .15s,transform .15s}.account-card:hover,.upgrade-card:hover{transform:translateY(-3px);border-color:#6d91a5}
+.version-stamp{margin-left:10px;color:#aadd5a;font-size:9px;background:#ccff4112;padding:4px 7px;border:1px solid #d4ff4c43;border-radius:6px;vertical-align:middle}
+.item-art{width:100%;height:100%;display:block;object-fit:cover;border-radius:inherit}.loot-avatar{width:100%;height:168px;max-width:none;box-shadow:none;background:#131d37;margin:13px 0 4px;overflow:hidden;border:1px solid #485777;border-radius:11px}.loot-entry-icon{width:44px;height:44px;flex:0 0 44px;overflow:hidden;padding:0}.loot-entry-icon img{width:100%;height:100%;object-fit:cover;border-radius:7px}.loot-name{min-height:41px!important}
+.account-grid{grid-template-columns:repeat(auto-fill,minmax(205px,1fr))!important}.market-split{grid-template-columns:minmax(0,2.2fr) minmax(280px,.85fr)!important}.loot-catalog{max-height:1050px;overflow:auto;scrollbar-color:#4d6883 transparent;padding-right:3px}.loot-section{background:#17263d}.loot-entry{min-height:46px}.reward-em.has-art{width:150px;height:150px;display:block;margin:15px auto;border:2px solid #687b9a;border-radius:16px;overflow:hidden;font-size:0}
+.upgrade-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 18px}.upgrade-toolbar input{flex:1;min-width:170px;max-width:330px;color:white;background:#172a42;border:1px solid #485d78;border-radius:10px;padding:12px 14px;font-size:13px}.upgrade-filters{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}.filter-btn{border:1px solid #3d516d;color:#a5bcd6;background:#18273d;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:800}.filter-btn.active{background:#ceff4d25;border-color:#cbff4d;color:#dfff8b}.up-group{display:inline-flex;align-items:center;margin-bottom:6px;font-size:10px;color:#91b5d7;border-radius:6px;letter-spacing:1px;text-transform:uppercase}.upgrade-card{position:relative;background:radial-gradient(circle at 100% 0,#a5caffe,transparent 46%) #17233a;background:radial-gradient(circle at 100% 0,#4f709529,transparent 46%),#17233a}.upgrade-card .upicon{filter:drop-shadow(0 3px 8px #b8ff4e30)}
+.online-callout{border:1px solid #54637d;border-radius:13px;background:linear-gradient(135deg,#1a3047,#15243c);padding:17px;margin-bottom:20px;line-height:1.7;color:#b6cde6;font-size:13px}.online-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#7a8498;margin-right:7px}.online-dot.live{background:#bdf65d;box-shadow:0 0 9px #b3fa7a}
+.auth-grid{display:grid;grid-template-columns:minmax(260px,450px) 1fr;gap:18px}.auth-card{background:#17263d;border:1px solid #354f6c;border-radius:16px;padding:25px}.auth-card h2{margin:0 0 12px}.auth-label{display:block;color:#a8bdd4;font-size:11px;font-weight:850;margin:16px 0 7px}.auth-field{width:100%;background:#0e1b30;color:white;border:1px solid #506580;padding:13px;border-radius:10px;font-size:14px}.auth-submit{width:100%;margin-top:18px}.auth-note{color:#9badc4;font-size:12px;line-height:1.7;margin-top:12px}.auth-switch{display:flex;gap:8px;margin:0 0 22px}.auth-switch button{flex:1}.auth-logged{display:grid;gap:12px}
+.score-row{display:grid;grid-template-columns:42px minmax(0,1.25fr) minmax(0,.6fr) minmax(0,.7fr) minmax(0,.65fr);gap:12px;align-items:center;padding:15px 16px;border-bottom:1px solid #304056;font-size:13px}.score-row:first-child{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:#869bb5;font-weight:900}.score-row.is-me{background:#caff4112}.score-rank{font-weight:1000;color:#d2f890;font-size:16px}.score-name{font-weight:850;overflow-wrap:anywhere}.score-number{color:#dce8fb;font-weight:800}.score-panel{border:1px solid #334b65;border-radius:13px;overflow:hidden;background:#152238}.score-empty{padding:26px;color:#9db1cd;text-align:center}.lb-top{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap}.lb-top small{color:#8fb0c3}
+.feature-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:19px}.feature-chips>span{border-radius:9px;padding:10px 13px;background:#1c2e46;border:1px solid #405776;color:#a9cce6;font-size:11px;font-weight:900}
+#onlineUserLabel{color:#cfff87}.status-pill{font-weight:900;white-space:nowrap;font-size:10px;padding:7px 9px;border-radius:8px;background:#203d40;border:1px solid #3b7e6b;color:#c2ffcf}
+@media(max-width:1180px){.market-split{grid-template-columns:1fr!important}}@media(max-width:860px){.auth-grid{grid-template-columns:1fr}.loot-avatar{height:150px}}@media(max-width:550px){.score-row{grid-template-columns:27px minmax(0,1fr) 60px 66px;gap:6px;padding:13px 7px;font-size:11px}.score-row>div:last-child{display:none}.score-rank{font-size:12px}.account-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px}.loot-avatar{height:110px}.account-card{padding:10px}.account-card .loot-name{font-size:12px}.upgrade-toolbar input{max-width:none}.auth-card{padding:17px}}
+
+  
+/* ===============================================================
+   PG//VERSE 9 — NEON EDITION / A design-only layer, zero game changes
+   =============================================================== */
+:root{
+  color-scheme:dark;
+  --bg:#080b19;--bg2:#11182b;--panel:#131a30;--panel2:#202b48;
+  --line:#34405e;--text:#f6f8ff;--muted:#9daacc;
+  --lime:#caff56;--cyan:#67e7ff;--pink:#ff79b4;--purple:#b79aff;
+  --gold:#ffdb79;--danger:#ff8695;
+  --shadow:0 24px 60px rgba(2,6,20,.38),inset 0 1px 0 rgba(255,255,255,.035);
+}
+html{scroll-padding-top:20px}
+body{
+  font-family:Inter,"Segoe UI Variable","Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+  background:#080b19;color:var(--text);letter-spacing:.02px;
+}
+body:before{
+  z-index:-2;
+  background:
+    radial-gradient(ellipse 64% 48% at 51% -10%,rgba(64,99,189,.29),transparent 72%),
+    radial-gradient(ellipse 36% 60% at 100% 43%,rgba(102,58,175,.19),transparent 72%),
+    radial-gradient(ellipse 35% 40% at 0 95%,rgba(20,143,140,.12),transparent 80%),
+    linear-gradient(90deg,rgba(144,167,239,.035) 1px,transparent 1px),
+    linear-gradient(rgba(144,167,239,.035) 1px,transparent 1px);
+  background-size:auto,auto,auto,46px 46px,46px 46px;
+  mask-image:linear-gradient(to bottom,#000 0%,#000 70%,#000b 100%);
+}
+::selection{background:#caff56;color:#111721}
+::-webkit-scrollbar{height:8px;width:8px}
+::-webkit-scrollbar-thumb{background:#394b6c;border:2px solid #111a2c;border-radius:20px}
+::-webkit-scrollbar-track{background:transparent}
+.app{max-width:1760px;grid-template-columns:268px minmax(0,1fr)}
+.sidebar{
+  padding:29px 17px 20px;background:linear-gradient(175deg,rgba(16,22,41,.97),rgba(9,14,29,.98));
+  border-right:1px solid rgba(153,166,224,.16);box-shadow:10px 0 40px #00000012;
+}
+.sidebar:before{content:"";position:absolute;pointer-events:none;top:0;left:0;width:100%;height:180px;background:radial-gradient(ellipse at 0 0,rgba(167,129,255,.14),transparent 68%)}
+.logo{padding:6px 10px 34px;gap:15px;position:relative}
+.logo-block{
+  width:46px;height:46px;flex-basis:46px;border-radius:13px;transform:rotate(-9deg);
+  background:linear-gradient(145deg,#e9ffa9 0%,#bdff45 58%,#85d928 100%);
+  box-shadow:0 0 0 5px #bdfb4a15,0 9px 24px #bafe4d22,4px 5px 0 #335328;
+  font-size:32px;color:#0d1911;
+}
+.logo-title{font-size:21px;letter-spacing:-1.4px}.logo-title b{color:var(--lime)}
+.logo-sub{color:#9aaed2;font-size:9px;letter-spacing:2px;margin-top:5px}
+.version-stamp{color:#d7ffa1!important;border-color:#b9ff5b60!important;background:#baff6220!important;border-radius:20px!important;padding:3px 8px!important}
+.side-label{font-size:9px;letter-spacing:2.3px;color:#7486a6;margin:3px 0 13px}
+.nav{gap:7px}
+.nav-btn{
+  position:relative;padding:13px 14px;min-height:49px;color:#a9b5d0;
+  border-radius:13px;border:1px solid transparent;font-weight:750;letter-spacing:.1px;
+  transition:background .19s,border-color .19s,color .19s,transform .19s,box-shadow .19s;
+}
+.nav-ico{font-size:20px;width:25px;filter:grayscale(.25)}
+.nav-btn:hover{background:linear-gradient(110deg,#253452b0,#1b254288);color:#f5f7ff;transform:translateX(3px)}
+.nav-btn.active{
+  background:linear-gradient(105deg,#bbff5b28,#9eff5420 55%,#30493218);
+  border-color:#baf35d72;color:#e1ffa2;
+  box-shadow:inset 3px 0 0 #caff56,0 0 28px #8bda4010;
+}
+.nav-btn.active .nav-ico{filter:none}
+.nav-count{background:#caff56;color:#111b18;border-radius:7px;font-weight:950;box-shadow:0 0 12px #caff5630}
+.profile{border-radius:15px;background:#1a253d;border:1px solid #344460;padding:13px}
+.pfp{border-radius:11px;background:linear-gradient(145deg,#7f6bf2,#a883ff);box-shadow:0 5px 16px #8265f83c}
+.notice{background:#151f35;border-color:#354361;border-radius:14px;color:#a8b7cf}
+.donate-button{
+  border-radius:13px!important;background:linear-gradient(120deg,#264b41,#194239)!important;
+  border:1px solid #63b89991!important;color:#e8ffb0!important;box-shadow:inset 0 1px 0 #ffffff1e,0 12px 24px #0002;
+  transition:filter .2s,transform .2s,box-shadow .2s;
+}
+.donate-button:hover{filter:brightness(1.18);transform:translateY(-2px);box-shadow:0 12px 26px #36d69c1d}
+.main{padding:0 clamp(20px,2.5vw,44px) 46px}
+.topbar{height:auto;min-height:96px;display:flex;align-items:center;padding:19px 0;gap:15px;margin-bottom:31px;border-bottom:1px solid #33415d8c}
+.breadcrumb{font-size:11px;letter-spacing:1.6px;color:#8c9cb9}.breadcrumb b{color:#d2ff78}
+.language-picker{font-size:11px;color:#a8bbd8}
+.language-picker select{
+  min-height:42px;border-radius:12px;background:linear-gradient(130deg,#1b2941,#1a2440);
+  border:1px solid #526587;color:#f5faff;box-shadow:inset 0 1px 0 #ffffff11;
+}
+.top-stats{gap:9px}
+.stat-chip{
+  background:linear-gradient(145deg,rgba(35,48,76,.84),rgba(22,31,56,.95));
+  border:1px solid #3a4b6c;border-radius:13px;padding:9px 12px;
+  box-shadow:inset 0 1px 0 #ffffff0e,0 8px 24px #00000013;
+  font-variant-numeric:tabular-nums;
+}
+.stat-chip small{font-size:9px;letter-spacing:1.2px;margin-bottom:3px;color:#9baac5}
+.stat-chip .coin{display:grid;place-items:center;height:35px;width:35px;border-radius:11px;background:#ffffff0b;font-size:21px}
+.chip-level{color:#86eaff}
+.view.active{animation:neonViewIn .34s ease both}
+@keyframes neonViewIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.heading{margin-bottom:26px;align-items:center}
+.heading h1{
+  margin:0 0 13px;max-width:900px;font-size:clamp(30px,3.25vw,51px);line-height:1.03;
+  letter-spacing:-2.4px;font-weight:1000;text-wrap:balance;text-shadow:0 8px 35px #0007;
+}
+.heading h1 em{
+  color:#caff56;background:linear-gradient(120deg,#e6ff9c 8%,#caff56 60%,#79e4d2 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.eyebrow{font-size:10px;letter-spacing:2.9px;color:#caff56;margin-bottom:11px}
+.sub{font-size:13px;line-height:1.8;color:#a9b6d1;max-width:720px}
+.pill,.sim-pill{border-radius:40px;background:#202d4480;border:1px solid #51617e;color:#c1d1e8;box-shadow:inset 0 1px 0 #ffffff0f}
+.dot,.showcase-live{box-shadow:0 0 0 4px #caff561a,0 0 14px #caff56ad;animation:neonPulse 2.5s ease-in-out infinite}
+@keyframes neonPulse{50%{box-shadow:0 0 0 7px #caff560d,0 0 25px #caff5660}}
+.panel,.check-panel,.auth-card{
+  border:1px solid #354361;border-radius:21px;
+  background:linear-gradient(146deg,rgba(27,37,62,.96),rgba(17,26,45,.985));box-shadow:var(--shadow);
+}
+.panel-inner{padding:24px}
+.mini-header h3,.section-kicker{letter-spacing:.2px}
+.intro-strip,.leak-guide,.online-callout{
+  border-radius:16px;border:1px solid #4e6382;
+  background:linear-gradient(110deg,rgba(38,56,88,.92),rgba(23,38,69,.93));
+  box-shadow:inset 0 1px 0 #ffffff16,0 14px 28px #050b201a;
+  padding:18px 20px;
+}
+.intro-strip .strip-icon{font-size:36px;filter:drop-shadow(0 4px 7px #99ceff40)}
+.intro-strip strong{color:#f5f8ff;font-size:14px;margin-bottom:6px}.intro-strip small{color:#b5c5df;font-size:12px}
+.primary{
+  background:linear-gradient(115deg,#e8ffa6 0%,#caff56 52%,#a6e939 100%);
+  color:#14200d;box-shadow:0 5px 0 #658f28,0 11px 25px #9eea4a19;
+  border-radius:12px;min-height:47px;padding:12px 17px;
+  transition:transform .16s,filter .16s,box-shadow .16s;
+}
+.primary:hover:not(:disabled){transform:translateY(-3px);box-shadow:0 7px 0 #658f28,0 16px 34px #9eea4a30;filter:brightness(1.06)}
+.primary:active:not(:disabled){transform:translateY(2px);box-shadow:0 2px 0 #658f28}
+.secondary,.ghost,.filter-btn,.select{border-radius:11px}
+.secondary{background:linear-gradient(120deg,#283956,#25334e);border-color:#506486}
+.secondary:hover:not(:disabled),.ghost:hover:not(:disabled){background:#324664;border-color:#7c93bd}
+.ghost,.filter-btn{background:#1a2840;border:1px solid #425773}
+.ghost:hover,.filter-btn:hover{color:#effbff}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #caff56;outline-offset:3px}
+/* Featured artwork: uses images shipped with the project; no external requests. */
+.showcase-banner{
+  position:relative;isolation:isolate;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.03fr) minmax(310px,1fr);
+  gap:12px;align-items:center;min-height:274px;margin:0 0 22px;padding:28px 32px;
+  border-radius:24px;border:1px solid #6074ad91;
+  background:radial-gradient(circle at 90% 10%,#855cde51,transparent 38%),
+     radial-gradient(circle at 25% 100%,#3a8eb844,transparent 58%),linear-gradient(125deg,#202b55,#121d3b 63%,#271d49);
+  box-shadow:0 24px 50px #0006,inset 0 1px 0 #ffffff26;
+}
+.showcase-banner:before{content:"";position:absolute;inset:0;z-index:-1;opacity:.45;pointer-events:none;background:linear-gradient(90deg,transparent 97%,#9ee9ff12 97%),linear-gradient(transparent 97%,#9ee9ff12 97%);background-size:35px 35px;mask-image:linear-gradient(90deg,#fff0,#fff)}
+.showcase-orbit{position:absolute;border:1px solid #c1a7ff24;border-radius:50%;pointer-events:none;z-index:-1}.orbit-one{height:490px;width:490px;right:-80px;top:-144px}.orbit-two{height:300px;width:300px;right:90px;top:-54px}
+.showcase-copy{position:relative;z-index:2;max-width:550px}
+.showcase-kicker{display:inline-flex;align-items:center;gap:10px;letter-spacing:2.1px;font-size:10px;font-weight:950;color:#b8fcff;margin-bottom:13px}
+.showcase-live{display:inline-block;width:7px;height:7px;background:#caff56;border-radius:50%;flex-shrink:0}
+.showcase-copy h2{font-size:clamp(26px,2.8vw,41px);line-height:1.06;letter-spacing:-1.6px;margin:0 0 13px;text-wrap:balance}
+.showcase-copy h2 span{color:#caff56;text-shadow:0 0 25px #caff562b}
+.showcase-copy p{max-width:410px;color:#b9cae6;font-size:12px;line-height:1.75;margin:0 0 18px}
+.showcase-action{font-size:11px;min-height:43px;display:inline-flex;align-items:center;gap:16px}
+.showcase-action span{font-size:18px}
+.showcase-gallery{display:flex;align-items:center;justify-content:center;min-width:0;max-width:590px;transform:rotate(-3deg);margin-left:auto}
+.showcase-art{
+  position:relative;width:32%;aspect-ratio:0.89;max-height:220px;min-width:0;overflow:hidden;
+  border:1px solid #a8b9f575;background:#0e1932;border-radius:17px;
+  box-shadow:0 19px 42px #04081787,inset 0 1px 0 #ffffff33;
+  transition:transform .22s,border-color .22s;
+}
+.showcase-art:hover{transform:translateY(-8px) rotate(0deg)!important;border-color:#deff93}
+.showcase-art img{width:100%;height:100%;object-fit:cover;display:block}
+.showcase-art:after{content:"";position:absolute;inset:45% 0 0;background:linear-gradient(transparent,#0b1026c7)}
+.showcase-art>span:not(.showcase-art-badge){position:absolute;z-index:2;bottom:12px;left:0;right:0;text-align:center;font-size:10px;font-weight:1000;letter-spacing:2px;color:#e7eeff}
+.showcase-art-left{transform:rotate(-9deg) translateX(17px) translateY(7px)}
+.showcase-art-center{z-index:3;width:38%;max-height:255px;transform:rotate(3deg);border:2px solid #d9fb7cb5;box-shadow:0 21px 52px #050817ad,0 0 40px #9ae65924}
+.showcase-art-right{transform:rotate(11deg) translateX(-16px) translateY(8px)}
+.showcase-art-badge{position:absolute;z-index:5;left:8px;right:8px;top:8px;text-align:center;border:1px solid #f7ffab82;background:#a0e72c2d;color:#f4ffba;padding:6px 2px;border-radius:7px;font-size:8px;letter-spacing:1px;font-weight:1000}
+/* NPC cards */
+.targets-grid{gap:15px}
+.target-card{
+  position:relative;isolation:isolate;overflow:hidden;min-height:251px;padding:19px;
+  border-radius:19px;border:1px solid #3c4c6d;
+  background:radial-gradient(circle at 100% 0,#667bd521,transparent 53%),linear-gradient(150deg,#1c2844,#121c31);
+  box-shadow:var(--shadow);transition:transform .22s,border-color .22s,box-shadow .22s;
+}
+.target-card:before{content:"";position:absolute;z-index:-1;right:-51px;top:43px;height:148px;width:148px;border:1px solid #b4c6ff0c;border-radius:50%;box-shadow:0 0 0 26px #a8bbff07,0 0 0 52px #a8bbff05}
+.target-card:hover{transform:translateY(-6px);border-color:#b6f87882;box-shadow:0 21px 49px #0007,0 0 26px #8eff3e0d}
+.npc-top{gap:8px}.npc-tag{color:#d9ff97}.npc-state{border:1px solid #3b4c69;border-radius:8px;background:#24334b}
+.npc-avatar{
+  width:65px;height:65px;margin:20px 0 16px;border:1px solid #687cbe;border-radius:16px;
+  background:linear-gradient(140deg,#4d5a98,#283a6c);font-size:35px;
+  box-shadow:0 0 0 5px #b9c8ff08,0 11px 24px #03071466;
+}
+.target-card:nth-child(4n+2) .npc-avatar{background:linear-gradient(135deg,#5b427f,#293c74)}
+.target-card:nth-child(4n+3) .npc-avatar{background:linear-gradient(135deg,#245e73,#2b4072)}
+.target-card:nth-child(4n+4) .npc-avatar{background:linear-gradient(135deg,#725443,#454077)}
+.target-card h3{font-size:16px;color:#f5f7ff;letter-spacing:-.15px}
+.target-card p{color:#9eafca;font-size:11px;line-height:1.8}
+.npc-actions .primary{box-shadow:none;border-radius:10px}.npc-actions .primary:hover{box-shadow:0 6px 17px #b9ff4d26}
+/* section metrics / home overview */
+.metric{
+  border:1px solid #374766;border-radius:17px;
+  background:linear-gradient(145deg,#1f2d49,#172239);
+  box-shadow:var(--shadow);padding:19px 20px;
+}
+.metric:after{border-color:#ffffff09}
+.metric-num{font-size:33px;margin-top:10px}
+.dashboard-grid{gap:18px}
+.cta-panel{
+  position:relative;isolation:isolate;overflow:hidden;min-height:360px;padding:35px;border-radius:21px;
+  background:radial-gradient(circle at 94% 17%,#824bcb57,transparent 42%),linear-gradient(125deg,#243b65,#15213e);
+  border:1px solid #6580b4;box-shadow:var(--shadow);
+}
+.cta-panel>span,.cta-panel>.eyebrow,.cta-panel>h2,.cta-panel>p,.cta-panel>button{position:relative;z-index:2}
+.cta-art{position:absolute;right:-25px;top:33px;width:40%;max-width:300px;min-height:260px;transform:rotate(9deg);opacity:.46;filter:saturate(1.2);border-radius:30px;overflow:hidden;box-shadow:0 23px 40px #0009}
+.cta-art img{width:100%;height:100%;object-fit:cover}
+.cta-panel h2{max-width:440px;font-size:clamp(24px,2.5vw,35px);letter-spacing:-1px;text-wrap:balance}
+.cta-panel p{max-width:360px}
+.tier-row{border-color:#40516f}
+/* Upgrade shop */
+.upgrade-grid{gap:16px}
+.upgrade-card{
+  position:relative;isolation:isolate;overflow:hidden;border-radius:20px;min-height:264px;padding:23px;
+  border:1px solid #3a4b6c;background:radial-gradient(circle at 95% 0,#6387bd29,transparent 44%),linear-gradient(150deg,#202e4b,#141e34);
+  box-shadow:var(--shadow);transition:transform .2s,border-color .2s,box-shadow .2s;
+}
+.upgrade-card:before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:linear-gradient(#8beeff99,#d2ff6f00);opacity:.5;pointer-events:none}
+.upgrade-card:nth-child(4n+2){background:radial-gradient(circle at 95% 0,#8c70de2b,transparent 44%),linear-gradient(150deg,#222847,#151d36)}
+.upgrade-card:nth-child(4n+3){background:radial-gradient(circle at 95% 0,#70b69c30,transparent 44%),linear-gradient(150deg,#1d3547,#142537)}
+.upgrade-card:nth-child(4n+4){background:radial-gradient(circle at 95% 0,#e7a66f23,transparent 44%),linear-gradient(150deg,#282c45,#1b2037)}
+.upgrade-card:hover{transform:translateY(-5px);border-color:#a9dbe1;box-shadow:0 25px 50px #03071493}
+.upgrade-card .upicon{border:1px solid #5b7293;border-radius:15px;width:63px;height:63px;background:linear-gradient(140deg,#394c72,#263a62);box-shadow:inset 0 1px 0 #ffffff12,0 9px 20px #040a2080;font-size:37px}
+.upgrade-card h3{font-size:16px;letter-spacing:-.25px}
+.upgrade-card p{color:#a7b6d1}
+.upgrade-footer{border-color:#3c4b64}
+.filter-btn{padding:10px 13px;border:1px solid #3f5474;background:linear-gradient(125deg,#1e2e46,#17253b);color:#b0c0d7}
+.filter-btn.active{background:#caff5620;border-color:#bbef62;color:#e9ffb2;box-shadow:0 0 15px #caff5612}
+.upgrade-toolbar input,.check-entry input,.credential-grid input,.auth-field{
+  background:#101b31;border:1px solid #4f6282;border-radius:12px;box-shadow:inset 0 1px 5px #0000001b;
+}
+/* Rich collectible cards, iconic item art */
+.account-grid{gap:15px!important}
+.account-card{
+  isolation:isolate;overflow:hidden;border-radius:19px;padding:15px;
+  background:linear-gradient(150deg,#222d4a,#111b30);
+  border:1px solid #485675;box-shadow:var(--shadow);transition:transform .2s,border-color .2s,box-shadow .2s;
+}
+.account-card:before{top:-35px;right:-25px;height:120px;width:120px;border:18px solid var(--rar);opacity:.075}
+.account-card:after{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,var(--rar),transparent 75%);opacity:.84}
+.account-card:hover{transform:translateY(-5px);border-color:var(--rar);box-shadow:0 27px 60px #0009,0 0 26px #ae9dff16}
+.loot-avatar{
+  height:174px;margin:13px 0 9px;background:radial-gradient(circle at 50% 5%,#455b8a55,#111a31);
+  border:1px solid #5f7192;border-radius:15px;box-shadow:inset 0 1px 0 #ffffff1c;
+}
+.loot-avatar img{transition:transform .35s,filter .35s;filter:saturate(1.1)}
+.account-card:hover .loot-avatar img{transform:scale(1.075);filter:saturate(1.25)}
+.account-card .loot-name{font-size:15px;font-weight:900;letter-spacing:-.2px}
+.loot-owner{color:#b2c3dc}
+.loot-catalog{gap:11px}
+.loot-section{background:linear-gradient(135deg,#202d48,#17233b);border-color:#3d4e69;border-radius:13px;padding:13px}
+.loot-entry-icon{height:48px;width:48px;flex:0 0 48px;border-color:#597090;border-radius:10px}
+.loot-entry-icon img{border-radius:9px}
+/* LeakCheck: control-room look */
+.check-layout{gap:19px}
+.check-top{background:linear-gradient(120deg,#293c60,#1e2b4a);border-bottom-color:#526585;padding:20px 22px}
+.scan-start{background:linear-gradient(110deg,#2b3c63,#1c3551);padding:23px}
+.log-toolbar{background:#121d32;padding:14px 20px;border-color:#324461}
+.sim-log{background:radial-gradient(circle at 0 0,#20365188,transparent 55%),#0c1427;min-height:350px;padding:17px}
+.sim-log-header{border-left-color:#a6ff55;background:#1a2944}
+.log-row{border-radius:10px;border-color:#2d4165;background:#17253c;padding:11px 12px}
+.log-row.highlight{background:#273f3a;border-color:#a2e775;box-shadow:inset 3px 0 0 #caff56,0 4px 22px #9ee55d13}
+.check-bottom{padding:22px;background:linear-gradient(140deg,#1f2f4c,#18263f)}
+.check-entry input:focus,.credential-grid input:focus,.auth-field:focus{outline:none;border-color:#caff56;box-shadow:0 0 0 3px #caff5621}
+.check-side .panel-inner{padding:21px}.check-side h3{margin-bottom:17px}
+.session-stat{border-radius:13px;background:#202f4b;border-color:#425575}.session-stat strong{font-size:26px;color:#d1ff79}
+.side-step .number{border-radius:9px;background:#31425b;border-color:#719463}
+/* Other sections */
+.workflow-grid>div,.feature-chips>span,.score-panel,.auth-card,.online-callout{border-radius:15px}
+.workflow-grid>div{background:linear-gradient(130deg,#263554,#1d2942);border-color:#3e5575;padding:20px}
+.workflow-grid span{color:#ceff74;font-size:26px}
+.achievement{border-radius:14px;background:#1e2b44}
+.score-row.is-me{background:#caff5611}
+.score-row:not(:first-child):hover{background:#253650}
+.auth-card{background:linear-gradient(150deg,#202e4a,#151e34);padding:27px}
+.online-callout{line-height:1.85}
+.modal-wrap{background:#060a1bd1;backdrop-filter:blur(12px)}
+.modal{background:linear-gradient(150deg,#2c3c68,#121d37);border:1px solid #8297c9;border-radius:25px;box-shadow:0 38px 120px #000d;padding:34px}
+.modal .reward-em.has-art{border-radius:20px;width:166px;height:166px;box-shadow:0 12px 32px #0006,0 0 32px #caff5620}
+.toast{border-radius:13px;background:#223452;border-color:#729d82;box-shadow:0 20px 50px #0008}
+.footer{color:#8999b2;border-top:1px solid #2937538c;margin-top:34px;padding-top:24px}
+/* Soft decorations and accessible interactions */
+@media(hover:hover){.metric:hover{border-color:#58758b}.panel:hover{border-color:#44577b}}
+@media(max-width:1360px){.app{grid-template-columns:236px minmax(0,1fr)}.sidebar{padding:24px 13px}.showcase-banner{padding:25px}.showcase-copy h2{font-size:30px}}
+@media(max-width:1180px){.showcase-banner{grid-template-columns:1fr minmax(210px,.75fr)}.showcase-art-left,.showcase-art-right{display:none}.showcase-art-center{width:80%;max-width:200px;height:200px;margin:auto;transform:rotate(6deg)}.showcase-gallery{width:100%}.top-stats{gap:7px}}
+@media(max-width:900px){
+ .app{display:block}.sidebar{height:auto;position:sticky;top:0;z-index:60;padding:12px 15px 9px;background:#0d1427f5;border-right:0;border-bottom:1px solid #42516c;backdrop-filter:blur(22px)}
+ .sidebar:before{display:none}
+ .logo{padding:0 0 6px}.logo-block{width:34px;height:34px;flex-basis:34px;border-radius:9px;font-size:24px;box-shadow:0 0 0 3px #bdfb4a1b,2px 3px 0 #335328}
+ .logo-title{font-size:17px}.nav{padding:6px 0 0;gap:7px;scrollbar-width:none}.nav::-webkit-scrollbar{display:none}
+ .nav-btn{min-height:37px;padding:9px 12px;font-size:11px;border-radius:10px}.nav-btn:hover{transform:none}.nav-ico{font-size:15px;width:auto}
+ .main{padding:0 18px 35px}.topbar{min-height:0;padding:15px 0;margin-bottom:24px}
+ .heading h1{font-size:clamp(30px,5vw,42px)}
+ .showcase-banner{min-height:235px;margin-top:3px}.panel-inner{padding:20px}
+}
+@media(max-width:650px){
+ .heading{margin-bottom:18px}.heading h1{font-size:clamp(29px,8.2vw,40px);letter-spacing:-1.4px;margin-bottom:10px}.sub{font-size:12px;line-height:1.7}
+ .main{padding:0 14px 30px}.topbar{gap:9px;padding:12px 0 17px;margin-bottom:24px}
+ .stat-chip{padding:7px 10px}.stat-chip .coin{height:28px;width:28px;font-size:18px;background:none}
+ .stat-chip small{font-size:8px}.language-picker select{min-height:37px}
+ .showcase-banner{grid-template-columns:minmax(0,1fr) 106px;gap:0;min-height:196px;border-radius:19px;padding:19px 15px 19px 18px;margin-bottom:17px}
+ .showcase-copy h2{font-size:clamp(23px,6.2vw,32px);letter-spacing:-.85px;line-height:1.07;margin-bottom:9px}
+ .showcase-kicker{font-size:8px;letter-spacing:1px;margin-bottom:9px}.showcase-copy p{font-size:10px;line-height:1.5;max-width:285px;margin:0 0 12px}
+ .showcase-action{font-size:9px;letter-spacing:.2px;min-height:38px;padding:10px 11px;gap:5px}.showcase-action span{font-size:12px}
+ .showcase-gallery{justify-content:flex-end}.showcase-art-center{width:115px;height:155px;max-height:155px;transform:rotate(7deg) translateX(4px);border-radius:13px}.showcase-art-badge{font-size:6px;letter-spacing:0;padding:3px}.showcase-art>span:not(.showcase-art-badge){font-size:7px;bottom:8px}
+ .showcase-orbit{display:none}
+ .intro-strip{padding:14px 15px;border-radius:14px;margin-bottom:15px}
+ .targets-grid{gap:10px}.target-card{min-height:235px;padding:12px;border-radius:15px}.npc-avatar{width:50px;height:50px;font-size:25px;margin:17px 0 13px;border-radius:12px}
+ .target-card h3{font-size:12px}.target-card p{font-size:10px;margin-bottom:13px}.npc-top{font-size:8px}.npc-state{padding:4px 5px}
+ .account-grid{gap:9px!important}.account-card{padding:10px;border-radius:14px}.loot-avatar{height:116px;margin:9px 0 5px;border-radius:11px}.account-card .loot-name{font-size:12px}
+ .upgrade-card{min-height:245px;border-radius:16px;padding:17px}.upgrade-card .upicon{height:54px;width:54px;font-size:30px}.upgrade-card h3{margin-top:15px;font-size:15px}
+ .metric{padding:13px 15px}.metric-num{font-size:26px}
+ .cta-panel{min-height:330px;padding:24px}.cta-art{right:-60px;opacity:.25}
+ .check-top{padding:15px}.scan-start{padding:16px}.check-bottom{padding:15px}
+ .modal{padding:23px;border-radius:21px}
+ .panel-inner{padding:16px}
+}
+@media(max-width:390px){.showcase-banner{grid-template-columns:minmax(0,1fr) 86px;padding-right:8px}.showcase-art-center{width:95px;height:143px}.showcase-copy h2{font-size:23px}.showcase-copy p{font-size:9px}.showcase-kicker{font-size:7px}.showcase-action{font-size:8px}.stat-chip{padding:6px 7px}.stat-chip .coin{width:22px}}
+@media(prefers-reduced-motion:reduce){.dot,.showcase-live{animation:none!important}.showcase-art,.target-card,.account-card,.upgrade-card{transition:none!important}}
+
+  
+/* ==========================================================
+   PG//VERSE — PURPLE / BLACK THEME
+   Design-only override. No changes to gameplay or item art.
+   ========================================================== */
+:root{
+  color-scheme:dark;
+  --bg:#08060d;--bg2:#0e0a17;--panel:#151021;--panel2:#201630;
+  --line:#392a53;--text:#f7f1ff;--muted:#a99aba;
+  --lime:#b78aff;--cyan:#d5b7ff;--pink:#e399ff;--purple:#b586ff;
+  --danger:#ff7caa;--shadow:0 21px 64px rgba(0,0,0,.5),inset 0 1px 0 #ffffff08;
+}
+html{background:#08060d}
+body{background:#08060d;color:var(--text)}
+body:before{
+  background:radial-gradient(ellipse 56% 45% at 47% -10%,rgba(130,54,232,.30),transparent 77%),
+    radial-gradient(ellipse 38% 45% at 100% 53%,rgba(75,25,119,.23),transparent 75%),
+    radial-gradient(ellipse 38% 40% at 0% 92%,rgba(103,45,155,.13),transparent 80%),
+    linear-gradient(90deg,rgba(184,125,255,.029) 1px,transparent 1px),
+    linear-gradient(rgba(184,125,255,.029) 1px,transparent 1px);
+  background-size:auto,auto,auto,46px 46px,46px 46px;
+}
+::selection{background:#a66bf3;color:#13071d}
+::-webkit-scrollbar-thumb{background:#533971;border-color:#120c1c}
+.sidebar{background:linear-gradient(175deg,rgba(20,12,32,.98),rgba(9,6,15,.99));border-color:#362447;box-shadow:10px 0 38px #0005}
+.sidebar:before{background:radial-gradient(ellipse at 0 0,#8c47d61e,transparent 69%)}
+.logo-block{
+  background:linear-gradient(145deg,#e1beff 0%,#ad73f9 57%,#7544cf 100%);
+  color:#160b29;box-shadow:0 0 0 5px #9c63ec1c,0 8px 26px #9653ef38,4px 5px 0 #48266c;
+}
+.logo-title b{color:#c7a3ff}
+.logo-sub,.side-label{color:#9984b4}
+.version-stamp{color:#e0c7ff!important;border-color:#b788fd61!important;background:#9b5de42a!important}
+.nav-btn{color:#ad9aba}
+.nav-btn:hover{background:linear-gradient(110deg,#352048b0,#22152fbb);color:#fff5ff}
+.nav-btn.active{
+  background:linear-gradient(105deg,#ae6bff35,#8c3de622 55%,#47236a20);
+  border-color:#ba85ff76;color:#e9d5ff;
+  box-shadow:inset 3px 0 0 #c69aff,0 0 30px #a35bff16;
+}
+.nav-count{background:#b889ff;color:#1a0b2b;box-shadow:0 0 15px #aa70ff2f}
+.notice{background:#1a1327;border-color:#3c2b52;color:#b6a5c9}
+.notice strong{color:#d9bcff}
+.profile{background:#20172d;border-color:#443055}
+.pfp{background:linear-gradient(145deg,#7a46d1,#bc8cfb);border-color:#b891f3;box-shadow:0 5px 20px #8753dc3c}
+.donate-button{
+  background:linear-gradient(120deg,#41225e,#281735)!important;
+  border-color:#9766d5a6!important;color:#f5deff!important;
+  box-shadow:inset 0 1px 0 #ffffff15,0 11px 25px #0004;
+}
+.donate-button:hover{box-shadow:0 12px 27px #b15ff638}
+.topbar{border-bottom-color:#412d5599}
+.breadcrumb{color:#ab97c0}.breadcrumb b{color:#d3a8ff}
+.language-picker{color:#c8b5d8}
+.language-picker select,.select{
+  background:linear-gradient(135deg,#291b3b,#1b1329);border-color:#64467c;color:#f8efff;
+}
+.stat-chip{background:linear-gradient(145deg,#261b37e8,#191323f2);border-color:#513767}
+.stat-chip small{color:#ae9cc1}.chip-level{color:#d9b9ff}
+.heading h1 em{
+  color:#d3aaff;background:linear-gradient(120deg,#f0ddff 0%,#cf9bff 50%,#a16cf5 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.eyebrow,.heading .eyebrow{color:#cb9cff}
+.sub{color:#b6a6c9}
+.pill,.sim-pill{background:#281b3b88;border-color:#60467d;color:#d4c3e7}
+.dot,.showcase-live,.online-dot.live{background:#c292ff;box-shadow:0 0 0 4px #b479ff1c,0 0 16px #b77cff92}
+@keyframes neonPulse{50%{box-shadow:0 0 0 7px #bc8aff11,0 0 26px #ba7bff68}}
+.panel,.check-panel,.auth-card{
+  background:linear-gradient(145deg,rgba(29,20,42,.98),rgba(15,11,23,.99));
+  border-color:#453057;box-shadow:var(--shadow);
+}
+.section-kicker{color:#e9d9ff}.section-kicker .square{background:#b886ff}
+.intro-strip,.leak-guide,.online-callout{
+  background:linear-gradient(110deg,rgba(49,28,69,.95),rgba(26,18,40,.96));
+  border-color:#69467d;box-shadow:inset 0 1px 0 #ffffff0e,0 15px 29px #0004;
+}
+.intro-strip .strip-icon{filter:drop-shadow(0 4px 10px #b780ff40)}
+.intro-strip small,.leak-guide small{color:#c0add6}
+.primary{
+  background:linear-gradient(115deg,#dbb7ff 0%,#b982ff 49%,#9558e8 100%);
+  color:#1c0d2d;box-shadow:0 5px 0 #63368f,0 11px 28px #a55aee38;
+}
+.primary:hover:not(:disabled){box-shadow:0 7px 0 #63368f,0 16px 34px #a55aee45}
+.primary:active:not(:disabled){box-shadow:0 2px 0 #63368f}
+.secondary{background:linear-gradient(120deg,#372549,#2b1d3d);border-color:#63467b;color:#e8dafa}
+.secondary:hover:not(:disabled),.ghost:hover:not(:disabled){background:#412b59;border-color:#a479d3}
+.ghost,.filter-btn{background:linear-gradient(125deg,#271a37,#1a1327);border-color:#503763;color:#d5c1e9}
+.ghost:hover,.filter-btn:hover{color:#fff3ff}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline-color:#bd8aff}
+/* Home and showcase */
+.showcase-banner{
+  border-color:#8055ad94;
+  background:radial-gradient(circle at 89% 12%,#9854e551,transparent 40%),
+    radial-gradient(circle at 20% 100%,#7230a539,transparent 58%),
+    linear-gradient(120deg,#29183e,#120d21 61%,#261239);
+  box-shadow:0 26px 59px #0008,inset 0 1px 0 #ffffff1b;
+}
+.showcase-banner:before{background:linear-gradient(90deg,transparent 97%,#d4abff13 97%),linear-gradient(transparent 97%,#d4abff13 97%);background-size:35px 35px}
+.showcase-orbit{border-color:#c6a2ff2d}
+.showcase-kicker{color:#e2c9ff}
+.showcase-copy h2 span{color:#d7b2ff;text-shadow:0 0 27px #af73ff52}
+.showcase-copy p{color:#c9b6dd}
+.showcase-art{background:#130d21;border-color:#b68de680;box-shadow:0 18px 43px #0009,inset 0 1px 0 #ffffff21}
+.showcase-art:hover{border-color:#d3a8ff}
+.showcase-art-center{border-color:#ca9bffc2;box-shadow:0 24px 49px #0009,0 0 39px #9c56e63b}
+.showcase-art-badge{border-color:#d9b9ff8c;background:#a26cea3b;color:#f4e8ff}
+.showcase-art:after{background:linear-gradient(transparent,#10091ed4)}
+.metric{background:linear-gradient(145deg,#281b39,#181122);border-color:#45305b}
+.metric-desc{color:#a995bd}
+.metric:nth-child(1) .metric-num,.metric:nth-child(2) .metric-num,.metric:nth-child(3) .metric-num{color:#cda6ff}
+.cta-panel{
+  background:radial-gradient(circle at 94% 17%,#a461eb60,transparent 43%),linear-gradient(125deg,#351e55,#181125);
+  border-color:#835ab3;
+}
+.tier-row{border-color:#463255}
+/* NPCs, loot and upgrades — images and rarity attributes unchanged */
+.target-card{background:radial-gradient(circle at 100% 0,#a064df23,transparent 50%),linear-gradient(150deg,#261a37,#15101f);border-color:#4b3460}
+.target-card:before{border-color:#c0a2ff11;box-shadow:0 0 0 26px #c5a1ff09,0 0 0 52px #c5a1ff07}
+.target-card:hover{border-color:#b585ff99;box-shadow:0 21px 49px #0008,0 0 26px #ad75ff1b}
+.npc-tag{color:#d7b6ff}.npc-state{background:#342148;border-color:#5a3b6d}
+.npc-avatar{background:linear-gradient(140deg,#7449a4,#332158);border-color:#9971cf;box-shadow:0 0 0 5px #a16cff12,0 11px 24px #0008}
+.target-card:nth-child(4n+2) .npc-avatar{background:linear-gradient(135deg,#66368a,#30205b)}
+.target-card:nth-child(4n+3) .npc-avatar{background:linear-gradient(135deg,#57318a,#2a2058)}
+.target-card:nth-child(4n+4) .npc-avatar{background:linear-gradient(135deg,#694385,#3f2769)}
+.target-card p{color:#b4a2c7}.npc-actions .primary:hover{box-shadow:0 7px 20px #a96af444}
+.upgrade-card,
+.upgrade-card:nth-child(4n+2),
+.upgrade-card:nth-child(4n+3),
+.upgrade-card:nth-child(4n+4){
+  background:radial-gradient(circle at 94% 0%,#9955d82b,transparent 48%),linear-gradient(150deg,#251932,#15101f);
+  border-color:#4b355e;
+}
+.upgrade-card:nth-child(4n+2){background:radial-gradient(circle at 95% 0,#bc78f328,transparent 48%),linear-gradient(150deg,#281936,#15101f)}
+.upgrade-card:nth-child(4n+3){background:radial-gradient(circle at 95% 0,#8044b429,transparent 48%),linear-gradient(150deg,#22162e,#120d1b)}
+.upgrade-card:nth-child(4n+4){background:radial-gradient(circle at 95% 0,#a05bce27,transparent 48%),linear-gradient(150deg,#281a36,#181020)}
+.upgrade-card:before{background:linear-gradient(#bc8cff92,#bc8cff00)}
+.upgrade-card:hover{border-color:#c699f8;box-shadow:0 24px 50px #0009}
+.upgrade-card .upicon{background:linear-gradient(140deg,#4a3066,#2a1d42);border-color:#755390;box-shadow:inset 0 1px 0 #ffffff15,0 9px 20px #0007}
+.upgrade-card p{color:#b5a5c8}
+.upgrade-toolbar input,.check-entry input,.credential-grid input,.auth-field{
+  background:#140e20;border-color:#634675;color:#f8efff;
+}
+.upgrade-toolbar input:focus,.check-entry input:focus,.credential-grid input:focus,.auth-field:focus{border-color:#b887fc;box-shadow:0 0 0 3px #b887fc27}
+.filter-btn{background:linear-gradient(125deg,#281b38,#1b1329);border-color:#523969;color:#d0bae6}
+.filter-btn.active{background:#aa72fd2b;border-color:#b17cf7;color:#ead7ff;box-shadow:0 0 18px #9e61fb1b}
+.level-dots{color:#c899ff}
+.account-card{background:linear-gradient(150deg,#2a1c3b,#130e1e);border-color:#50385f}
+.account-card:hover{border-color:var(--rar);box-shadow:0 27px 60px #000a,0 0 26px #ae79f62c}
+.loot-avatar{background:radial-gradient(circle at 50% 5%,#7746aa48,#140e22);border-color:#775b8e}
+.loot-owner{color:#c7b2d8}.loot-catalog-intro{color:#bfb0d4}
+.loot-section{background:linear-gradient(135deg,#271b37,#171021);border-color:#4d375e}
+.loot-section-head{border-color:#4b355d}.loot-section-head span{color:#ad98c2}
+.loot-entry{color:#e1d4f1}.loot-entry-icon{background:#291a3e;border-color:#704a85}
+.loot-caption{color:#cca5ff}.reward-em.has-art{border-color:#8c66b3;box-shadow:0 12px 34px #0009,0 0 33px #b274ff33}
+/* LeakCheck screens */
+.terminal{background:radial-gradient(circle at 75% 20%,#9055c653,transparent 42%),linear-gradient(125deg,#2b1a40,#1b132d 65%,#231332);border-color:#745396}
+.leak-hero{background:radial-gradient(circle at 85% 4%,#974bd94a,transparent 48%),linear-gradient(145deg,#2c1c45,#1c142d);border-color:#78509d}
+.leak-data{background:#110b20;border-color:#65478a;color:#cbb4e9}.leak-data b{color:#e3bcff}
+.leak-feature{color:#e6c8ff}.scan-card,.scan-card .scan-effect{background:#241631;border-color:#51356c}
+.scan-effect strong{color:#deb5ff}
+.leak-guide{border-color:#684b80}.guide-symbol{background:#b781ff2b;border-color:#b781ff96}
+.check-panel{border-color:#523767}
+.check-top{background:linear-gradient(120deg,#352147,#22162f);border-bottom-color:#654a7d}
+.check-top small{color:#b7a2cb}
+.scan-start{background:linear-gradient(110deg,#342045,#211733)}
+.log-toolbar{background:#160f22;border-color:#4b355e;color:#a693bd}
+.log-toolbar .indicator{background:#ab72f41e;border-color:#ac7af36b;color:#e3caff}
+.sim-log{background:radial-gradient(circle at 0 0,#43245f91,transparent 55%),#100b19}
+.sim-log-header{background:#241833;border-left-color:#bd8cff;color:#bba1d8}
+.log-row{background:#20162c;border-color:#4b335d}
+.log-row.highlight{background:#35214b;border-color:#bb86ed;box-shadow:inset 3px 0 0 #ba8bff,0 4px 22px #a971fa20}
+.check-bottom{background:linear-gradient(140deg,#2b1c3e,#1a1228)}
+.session-stat{background:#281b3b;border-color:#573c6f}.session-stat strong{color:#d3a8ff}
+.side-step .number{background:#39244f;border-color:#845ca3}
+.progress-track{background:#130b22;border-color:#654782}
+.progress-fill,.progress-mini div{background:repeating-linear-gradient(90deg,#a76af6 0 14px,#ca9bff 14px 21px)}
+/* Other sections / account & shared leaderboard */
+.workflow-grid>div{background:linear-gradient(130deg,#302045,#20152f);border-color:#574073}
+.workflow-grid span{color:#d6adff}
+.achievement{background:#25192f;border-color:#49355e}
+.achievement.unlocked{background:#2d1d3b;border-color:#8158a3}
+.score-panel{background:#1b1328;border-color:#4c365f}
+.score-row{border-color:#3b294b}.score-row.is-me{background:#ad78f91d}
+.score-row:not(:first-child):hover{background:#2d1e3d}
+.score-rank{color:#d3a9ff}
+.feature-chips>span{background:#2a1b3b;border-color:#5d4178;color:#d8bee9}
+.auth-card{background:linear-gradient(150deg,#281a3c,#161020)}
+#onlineUserLabel{color:#e1bdff}
+.status-pill{background:#382146;border-color:#8651a1;color:#f0ceff}
+.online-dot.live{background:#bb8bff}
+.modal-wrap{background:#090512db}
+.modal{background:linear-gradient(150deg,#35234d,#130e20);border-color:#8a65ad}
+.toast{background:#2a1b3c;border-color:#9868bb;border-left-color:#b47cff}
+.footer{border-top-color:#48315680;color:#a392b5}
+/* The mobile nav receives exactly the same theme, without changing layout. */
+@media(max-width:900px){
+  .sidebar{background:#100b1cef;border-bottom-color:#4b345f}
+  .logo-block{box-shadow:0 0 0 3px #ba83ff24,2px 3px 0 #462466}
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo"><div class="logo-block"><span>◈</span></div><div><div class="logo-title">PG<b>//</b>VERSE</div><div class="logo-sub">NEON EDITION <span class="version-stamp">V9</span></div></div></div>
+    <div class="side-label">ИГРОВОЕ МЕНЮ</div>
+    <nav class="nav" aria-label="Основная навигация">
+      <button class="nav-btn active" data-tab="targets"><span class="nav-ico">☷</span> База ников <span class="nav-count" id="navTargets">8</span></button>
+      <button class="nav-btn" data-tab="leak"><span class="nav-ico">◈</span> LeakCheck <span class="nav-count">PLAY</span></button>
+      <button class="nav-btn" data-tab="home"><span class="nav-ico">⌂</span> Главная</button>
+      <button class="nav-btn" data-tab="market"><span class="nav-ico">▤</span> Маркетплейс <span class="nav-count" id="navInv">0</span></button>
+      <button class="nav-btn" data-tab="upgrades"><span class="nav-ico">⬆</span> Апгрейды</button>
+      <button class="nav-btn" data-tab="collection"><span class="nav-ico">▦</span> Коллекция</button>
+      <button class="nav-btn" data-tab="leaderboard"><span class="nav-ico">🏆</span> Рейтинг игроков</button>
+      <button class="nav-btn" data-tab="account"><span class="nav-ico">🔐</span> Мой аккаунт</button>
+    </nav>
+    <a class="donate-button donate-sidebar" href="https://www.donationalerts.com/r/sartee_9" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">💚</span> денюшка создателю</a>
+    <div class="side-bottom">
+      <div class="notice"><strong>🎮 Это вымышленная игра.</strong><br>Никаких настоящих паролей, утечек или аккаунтов. Только виртуальные NPC и игровая валюта.</div>
+      <div class="profile"><div class="pfp">😎</div><div><strong id="onlineUserLabel">PG PLAYER</strong><small id="sidebarRank">Новичок · LVL 1</small></div></div>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <div class="breadcrumb">PG//VERSE <span style="color:#596c85">/</span> <b id="crumb">База ников</b></div>
+      <label class="language-picker"><span>🌐 <span id="languageCaption">Язык</span></span><select id="languageSelect" aria-label="Язык интерфейса"><option value="ru">🇷🇺 Русский</option><option value="en">🇬🇧 English</option><option value="es">🇪🇸 Español</option><option value="pl">🇵🇱 Polski</option></select></label><a class="donate-button donate-mobile" href="https://www.donationalerts.com/r/sartee_9" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">💚</span> денюшка создателю</a>
+      <div class="top-stats">
+        <div class="stat-chip"><span class="coin">🪙</span><div><small>БАЛАНС</small><span id="topCoins">0</span></div></div>
+        <div class="stat-chip"><span class="coin">⭐</span><div><small>УРОВЕНЬ</small><span class="chip-level" id="topLvl">1</span></div></div>
+        <div class="stat-chip"><span class="coin">🎒</span><div><small>ХРАНИЛИЩЕ</small><span id="topSlots">0/12</span></div></div>
+      </div>
+    </header>
+
+    <section class="view" id="view-home">
+      <div class="heading"><div><div class="eyebrow">// THE GRIND STARTS HERE</div><h1>ЛОГИ. <em>ЛУТ.</em> ПРОФИТ.</h1><p class="sub">Выбирай NPC из базы ников, проверяй его игровые логи, ищи roblox.com и вводи USER + PASS ради виртуальных карточек.</p></div><div class="pill"><i class="dot"></i> СИМУЛЯТОР ОНЛАЙН</div></div>
+      <div class="overview">
+        <div class="metric"><div class="metric-tag">Проверено логов</div><div class="metric-num" id="mRuns">0</div><div class="metric-desc">Обработанных наборов</div></div>
+        <div class="metric"><div class="metric-tag">Найдено аккаунтов</div><div class="metric-num" id="mFound">0</div><div class="metric-desc">Найденных в логах NPC</div></div>
+        <div class="metric"><div class="metric-tag">Заработано на рынке</div><div class="metric-num" id="mProfit">0</div><div class="metric-desc">Игровых монет</div></div>
+        <div class="metric"><div class="metric-tag">Лучший дроп</div><div class="metric-num" id="mBest">—</div><div class="metric-desc">Максимальная редкость</div></div>
+      </div>
+      <div class="dashboard-grid">
+        <div class="cta-panel"><div class="cta-art" aria-hidden="true"><img src="assets/dominus_astra.webp" alt="" loading="lazy"></div><span class="cta-em">🔎</span><div class="eyebrow">// ОСНОВНОЙ РЕЖИМ</div><h2>ВЫБЕРИ <span style="color:var(--lime)">NPC</span> И ПРОВЕРЬ ЛОГИ</h2><p>Выбери NPC в базе ников, введи ник в LeakCheck, найди roblox.com и перепиши USER + PASS. Если Roblox нет — скипни аккаунт и выбери следующего.</p><button class="primary" data-tab="targets">▶ ОТКРЫТЬ БАЗУ НИКОВ</button></div>
+        <div class="panel"><div class="panel-inner"><div class="mini-header"><h3>🏆 УРОВНИ АККАУНТОВ</h3><span>от простых до ADMIN</span></div><div class="tier-list" id="tierList"></div><div class="panel-note">Прокачивай <b>удачу</b> для редких находок и <b>сканер</b>, чтобы Roblox чаще встречался в вымышленных логах.</div></div></div>
+      </div>
+      <div class="bottom-grid">
+        <div class="panel"><div class="panel-inner"><div class="mini-header"><h3>🎯 КВЕСТЫ И НАГРАДЫ</h3><span>выполни и забери</span></div><div id="quests"></div></div></div>
+        <div class="panel"><div class="panel-inner"><div class="mini-header"><h3>⚡ ПОСЛЕДНИЕ СОБЫТИЯ</h3><span>журнал игры</span></div><div id="feed"></div></div></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-market">
+      <div class="heading"><div><div class="eyebrow">// BUY • SELL • REPEAT</div><h1>ЧЁРНЫЙ <em>МАРКЕТ.</em></h1><p class="sub">Продавай найденные в логах карточки с популярными предметами Roblox за игровые монеты. Ни настоящих предметов, ни аккаунтов тут нет.</p></div></div>
+      <div class="intro-strip"><div><strong>💰 Витрина твоих находок</strong><small>Продавай карточки с коллекционными предметами Roblox по одной или сразу все. Апгрейд прибыли увеличивает выплаты.</small></div><span class="strip-icon">🏪</span></div>
+      <div class="market-split">
+        <div class="panel"><div class="panel-inner"><div class="toolbar"><h2>ТВОИ ЛОТЫ <span class="count-label" id="marketCount"></span></h2><div class="toolbar-right"><button class="ghost" id="sellAllBtn">🪙 Продать всё</button></div></div><div class="account-grid" id="marketItems"></div></div></div>
+        <div class="panel"><div class="panel-inner"><div class="mini-header"><h3>✨ ПРЕДМЕТЫ ROBLOX</h3><span>возможный лут</span></div><p class="loot-catalog-intro">После успешного LeakCheck выпадает случайная <b>игровая карточка предмета</b>. Чем реже найденный аккаунт, тем круче лут!</p><div class="loot-catalog" id="lootCatalog"></div><div class="panel-note">Это коллекционные копии внутри симулятора — предметы не выдаются в настоящем Roblox.</div></div></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-upgrades">
+      <div class="heading"><div><div class="eyebrow">// POWER UP YOUR SIM</div><h1>МАГАЗИН <em>АПГРЕЙДОВ.</em></h1><p class="sub">Ускоряй загрузку логов, повышай шанс Roblox-записи, ищи редкие профили и получай больше игровых монет.</p></div></div>
+      <div class="intro-strip"><div><strong>🛠 Стань топовым PG-игроком</strong><small>Улучшения сохраняются автоматически, а при входе — ещё и на сервере. Каждый следующий уровень дороже предыдущего.</small></div><span class="strip-icon">⚙️</span></div>
+      <div class="upgrade-toolbar"><strong id="upgradeCount">36 улучшений</strong><input type="search" id="upgradeSearch" placeholder="🔍 Найти улучшение..." aria-label="Поиск улучшений"></div>
+      <div class="upgrade-filters" id="upgradeFilters"></div>
+      <div class="upgrade-grid" id="upgradeGrid"></div>
+    </section>
+
+    <section class="view" id="view-leaderboard">
+      <div class="heading"><div><div class="eyebrow">// GLOBAL PLAYER RANKINGS</div><h1>ТОП <em>ИГРОКОВ.</em></h1><p class="sub">Настоящий общий рейтинг зарегистрированных игроков. Данные загружаются с сервера, а не из списка ботов. В HTML-демо рейтинг недоступен.</p></div><span class="pill">🏆 GLOBAL</span></div>
+      <div class="feature-chips"><span>🌍 Общий рейтинг</span><span>💰 Заработок</span><span>🎯 Найденные NPC</span><span>⭐ Уровень</span></div>
+      <div class="online-callout"><span class="online-dot" id="lbStatusDot"></span><b id="lbStatus">Проверяем подключение...</b><div id="lbInfo">Для рейтинга необходим сервер.</div></div>
+      <div class="panel"><div class="panel-inner"><div class="lb-top"><h2>🏆 ТОП-50</h2><button class="secondary" id="refreshLeaderboard">↻ Обновить рейтинг</button></div><div class="score-panel" id="leaderTable"><div class="score-empty">Загрузка...</div></div></div></div>
+    </section>
+    <section class="view" id="view-account">
+      <div class="heading"><div><div class="eyebrow">// PLAYER IDENTITY & CLOUD SAVE</div><h1>МОЙ <em>АККАУНТ.</em></h1><p class="sub">Создай аккаунт именно для PG//VERSE, чтобы сохранять игровой прогресс на сервере и участвовать в общем рейтинге. Не используй свой пароль Roblox.</p></div><span class="pill">🔐 CLOUD SAVE</span></div>
+      <div class="online-callout"><span class="online-dot" id="authStatusDot"></span><b id="authStatus">Проверяем сервер...</b><div id="authInfo">В автономном HTML-режиме игра сохраняется в браузере. Для входа нужен запущенный сервер.</div></div>
+      <div class="auth-grid">
+        <div class="auth-card"><div id="authGuest"><div class="auth-switch"><button id="modeLogin" class="secondary">Вход</button><button id="modeRegister" class="secondary">Регистрация</button></div><form id="authForm"><h2 id="authTitle">Войти в PG//VERSE</h2><label class="auth-label" for="authName">Имя игрока (3–20 символов)</label><input class="auth-field" id="authName" name="username" required maxlength="20" minlength="3" pattern="[A-Za-z0-9_]+" autocomplete="username" placeholder="Player_123"><label class="auth-label" for="authPassword">Пароль PG//VERSE (от 8 символов)</label><input class="auth-field" type="password" id="authPassword" name="password" required minlength="8" maxlength="72" autocomplete="current-password" placeholder="••••••••"><button id="authSubmit" class="primary auth-submit" type="submit">ВОЙТИ</button></form><p class="auth-note">Для сайта создаётся отдельный пароль. Пароли не передаются в Roblox и хранятся на сервере в виде защищённых хешей.</p></div>
+          <div id="authLogged" class="auth-logged" hidden><h2>✅ Аккаунт подключён</h2><div>Игрок: <strong id="authLoggedName">—</strong></div><div>☁️ <span id="cloudSaveInfo">Прогресс синхронизируется</span></div><button class="primary" id="syncNow">☁️ Сохранить в облако</button><button class="secondary" id="logoutBtn">Выйти</button></div>
+        </div>
+        <div class="auth-card"><h2>💾 Сохранение игры</h2><p class="sub">Без аккаунта прогресс хранится в localStorage браузера. После регистрации игра синхронизируется с сервером: монеты, уровни, апгрейды, коллекция и квесты.</p><div class="feature-chips" style="margin-top:20px"><span>✓ Автосохранение</span><span>✓ Синхронизация</span><span>✓ Рейтинг</span><span>✓ 4 языка</span></div><p class="auth-note">Синхронизация работает только при работающем сервере и постоянном хранилище на хостинге. Таблица лидеров демонстрационная по балансу честности: игровые действия рассчитываются в браузере.</p></div>
+      </div>
+    </section>
+    <section class="view active" id="view-targets">
+      <div class="heading"><div><div class="eyebrow">// NPC DATABASE • SELECT A TARGET</div><h1>БАЗА <em>НИКОВ.</em></h1><p class="sub">Здесь появляются вымышленные NPC-аккаунты. Выбери ник, введи его в LeakCheck и загрузи игровые записи. У некоторых персонажей нет записи Roblox — их можно пропустить.</p></div><div class="pill"><i class="dot"></i> ТОЛЬКО NPC</div></div>
+      
+      <div class="showcase-banner">
+        <div class="showcase-orbit orbit-one" aria-hidden="true"></div><div class="showcase-orbit orbit-two" aria-hidden="true"></div>
+        <div class="showcase-copy">
+          <span class="showcase-kicker"><span class="showcase-live"></span> NEW DROP SHOWCASE / 2026</span>
+          <h2>ОХОТА ЗА <span>ЛЕГЕНДАМИ.</span></h2>
+          <p>Находи игровые карточки редких предметов, прокачивай сканер и собирай коллекцию.</p>
+          <button class="primary showcase-action" data-tab="leak">◆ ОТКРЫТЬ LEAKCHECK <span aria-hidden="true">↗</span></button>
+        </div>
+        <div class="showcase-gallery" aria-hidden="true">
+          <div class="showcase-art showcase-art-left"><img src="assets/valkyrie_helm.webp" alt="" loading="eager"><span>VALKYRIE</span></div>
+          <div class="showcase-art showcase-art-center"><span class="showcase-art-badge">★ LEGENDARY</span><img src="assets/dominus_infernus.webp" alt="" loading="eager"><span>DOMINUS</span></div>
+          <div class="showcase-art showcase-art-right"><img src="assets/headless_horseman.webp" alt="" loading="eager"><span>HEADLESS</span></div>
+        </div>
+      </div>
+      <div class="intro-strip"><div><strong>🗂️ Очередь для проверки</strong><small>Ники придуманы игрой и не относятся к настоящим людям. После успешной проверки или скипа появится новый персонаж.</small></div><span class="strip-icon">🧱</span></div>
+      <div class="toolbar"><h2>ДОСТУПНЫЕ NPC <span class="count-label" id="targetCount"></span></h2><div class="toolbar-right"><span class="count-label">01. Выбери → 02. Проверь → 03. Найди USER + PASS</span></div></div>
+      <div class="targets-grid" id="targetList"></div>
+      <div class="panel" style="margin-top:18px"><div class="panel-inner"><div class="mini-header"><h3>🎮 КАК НАЧАТЬ</h3><span>3 простых шага</span></div><div class="workflow-grid"><div><span>01</span><b>Выбери NPC</b><small>Возьми ник из базы или запомни его.</small></div><div><span>02</span><b>Запусти LeakCheck</b><small>Введи ник из списка и загрузи записи этого NPC.</small></div><div><span>03</span><b>Найди Roblox</b><small>Перепиши USER и игровой PASS, либо пропусти аккаунт.</small></div></div></div></div>
+    </section>
+
+    <section class="view" id="view-leak">
+      <div class="heading"><div><div class="eyebrow">// ENTER NICK • OPEN LOG • FIND PASSWORD</div><h1>LEAK<em>CHECK.</em></h1><p class="sub">Сначала введи ник вымышленного NPC из <b>«Базы ников»</b>. Затем просмотри его игровые логи: найди <b style="color:var(--lime)">roblox.com</b>, введи USER и PASS. Если Roblox нет — скипни NPC.</p></div><div class="pill"><i class="dot"></i> LOCAL SIMULATION</div></div>
+      <div class="leak-guide"><div class="guide-symbol">🎮</div><div><strong>Вымышленные стилер-логи · 100% игровая симуляция</strong><small>Все записи, ники и пароли SIM_* сгенерированы локально. Никаких настоящих утечек, проверок чужих профилей и подключений к Roblox.</small></div></div>
+      <div class="check-layout">
+        <div class="check-panel">
+          <div class="scan-start"><div class="scan-caption"><span class="scan-step">ШАГ 01</span><strong>ВВЕДИ НИК NPC</strong><button class="ghost" data-tab="targets">☷ ОТКРЫТЬ БАЗУ НИКОВ</button></div>
+            <div class="check-entry"><input id="targetNickInput" type="text" spellcheck="false" maxlength="36" autocomplete="off" placeholder="Например: SimBlock_1234" aria-label="Ник NPC из базы"><button class="primary" id="loadTargetBtn">↳ НАЙТИ ЛОГИ</button></div>
+            <div class="scan-target-info" id="selectedTargetLabel">Выбери NPC из базы или введи его ник вручную.</div>
+          </div>
+          <div class="check-top"><div><strong>◈ SIMULATED LOG VIEWER</strong><div style="margin-top:6px"><small id="logTitle">LOG #0001 · ОЖИДАНИЕ</small></div></div><span class="mini-badge" id="logBadge">● ACTIVE</span></div>
+          <div class="log-toolbar"><span class="indicator" id="logRows">● 0 RECORDS</span><span>📁 fictional-records.sim</span><span style="margin-left:auto" id="logCountLabel">Лог 1</span></div>
+          <div class="sim-log" id="logViewer" aria-live="polite"><div class="log-placeholder"><span>🔐</span>Сначала введи ник NPC и нажми «Найти логи».</div></div>
+          <div class="check-bottom">
+            <div id="logVerification" hidden><div class="scan-caption"><span class="scan-step">ШАГ 02</span><strong>НАЙДИ USER + PASS НА ROBLOX.COM</strong></div>
+              <div class="credential-grid"><div><label for="nickInput">USER ИЗ СТРОКИ ROBLOX.COM</label><input id="nickInput" type="text" spellcheck="false" maxlength="36" autocomplete="off" placeholder="Игровой USER"></div>
+                <div><label for="passInput">PASS ИЗ ТОЙ ЖЕ СТРОКИ</label><div class="pass-input"><input id="passInput" type="password" spellcheck="false" maxlength="60" autocomplete="off" placeholder="Пароль SIM_*"><button class="ghost" type="button" id="passVisibleBtn" aria-label="Показать пароль">👁</button></div></div></div>
+              <button class="primary" id="verifyBtn" style="width:100%;margin-top:11px">✓ ПРОВЕРИТЬ USER + PASS</button>
+            </div>
+            <div class="log-actions"><button class="secondary" id="skipBtn">⏭ СКИПНУТЬ NPC</button><button class="ghost" id="hintBtn">📡 РАДАР</button><button class="ghost" id="nextLogBtn">☷ К БАЗЕ НИКОВ</button></div>
+            <div class="check-feedback" id="checkFeedback" role="status" aria-live="polite">Введи ник из базы, чтобы открыть игровые записи персонажа.</div>
+          </div>
+        </div>
+        <aside class="check-side">
+          <div class="panel"><div class="panel-inner"><h3>📊 ТВОЯ СТАТИСТИКА</h3><div class="session-stats"><div class="session-stat"><strong id="sScanned">0</strong><small>ЛОГОВ ПРОВЕРЕНО</small></div><div class="session-stat"><strong id="sClaimed">0</strong><small>АККАУНТОВ НАЙДЕНО</small></div><div class="session-stat"><strong id="sSkipped">0</strong><small>СКИПОВ</small></div><div class="session-stat"><strong id="sStreak">0</strong><small>СЕРИЯ НАХОДОК</small></div></div></div></div>
+          <div class="panel"><div class="panel-inner"><h3>🧭 КАК ИГРАТЬ</h3><div class="side-tips"><div class="side-step"><span class="number">1</span> Возьми ник NPC в <b>базе ников</b></div><div class="side-step"><span class="number">2</span> Введи его и открой <b>логи персонажа</b></div><div class="side-step"><span class="number">3</span> Найди <b>roblox.com</b>, впиши <b>USER + PASS</b></div><div class="side-step"><span class="number">4</span> Если Roblox нет, <b>скипни NPC</b></div></div><div class="panel-note">✨ Roblox есть не в каждом логе. Апгрейды влияют на вероятность, но никогда не делают её 100%.</div><button class="ghost" data-tab="upgrades" style="margin-top:14px;width:100%">↑ ПРОКАЧАТЬ СКАНЕР</button></div></div>
+          <div class="panel"><div class="panel-inner"><h3>🎁 НАГРАДЫ</h3><div class="tier-list" id="miniTierList"></div></div></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="view" id="view-collection">
+      <div class="heading"><div><div class="eyebrow">// SHOW OFF YOUR LOOT</div><h1>МОЯ <em>КОЛЛЕКЦИЯ.</em></h1><p class="sub">Виртуальные аккаунты с популярными вещами Roblox из игровых логов. Находи Shaggy, Valkyrie, Dominus и другие коллекционные карточки!</p></div></div>
+      <div class="toolbar"><h2>ИНВЕНТАРЬ <span class="count-label" id="collectionCount"></span></h2><div class="toolbar-right"><select class="select" id="sortSelect" aria-label="Сортировка коллекции"><option value="new">Сначала новые</option><option value="price">По стоимости</option><option value="rarity">По редкости</option></select><button class="ghost" id="collectionSellAll">💸 Продать всё</button></div></div>
+      <div class="account-grid" id="collectionItems"></div>
+      <div class="panel" style="margin-top:19px"><div class="panel-inner"><div class="mini-header"><h3>🏅 ОТКРЫТЫЕ ДОСТИЖЕНИЯ</h3><span>за лучший дроп</span></div><div class="achievements" id="achievements"></div></div></div>
+    </section>
+    <footer class="footer">PG//VERSE — неофициальный автономный симулятор, не связан с Roblox. Все NPC и пароли SIM_* вымышлены, никогда не проверяются на настоящих сайтах и не покидают браузер. <button class="ghost" style="font-size:10px;margin-left:5px;padding:6px 9px" id="resetBtn">Сбросить игру</button></footer>
+  </main>
+</div>
+<div id="toastStack" aria-live="polite"></div>
+<div class="modal-wrap" id="rewardModal" role="dialog" aria-modal="true" aria-label="Награда за проверку лога"><div class="modal"><span class="pill" id="modalTag">PG COMPLETED</span><span class="reward-em" id="modalEmoji">🎁</span><h2 id="modalTitle">Награда!</h2><p id="modalDesc"></p><div class="reward-price" id="modalPrice"></div><button class="primary" id="modalClose">ЗАБРАТЬ И ПРОДОЛЖИТЬ</button></div></div>
+<script>
+(()=>{
+'use strict';
+// Localization: RU (original), English, Español, Polski. Works completely offline.
+const I18N={"Рейтинг игроков":["Leaderboard", "Clasificación", "Ranking graczy"],"Мой аккаунт":["My account", "Mi cuenta", "Moje konto"],"ТОП":["TOP", "CLASIFICACIÓN", "TOP"],"ИГРОКОВ.":["PLAYERS.", "DE JUGADORES.", "GRACZY."],"Настоящий общий рейтинг зарегистрированных игроков. Данные загружаются с сервера, а не из списка ботов. В HTML-демо рейтинг недоступен.":["Shared live leaderboard of registered players. The server supplies real data, not bots. Unavailable in the standalone HTML demo.", "Clasificación global de jugadores registrados. Los datos vienen del servidor, no de bots. No disponible en la demo HTML.", "Wspólny ranking zarejestrowanych graczy. Dane pochodzą z serwera, bez botów. Niedostępny w demonstracji HTML."],"Общий рейтинг":["Global ranking", "Clasificación global", "Ranking globalny"],"Заработок":["Earnings", "Ganancias", "Zarobki"],"Найденные NPC":["NPCs found", "NPC encontrados", "Znalezione NPC"],"Для рейтинга необходим сервер.":["Leaderboard requires a server.", "La clasificación requiere un servidor.", "Ranking wymaga serwera."],"Проверяем подключение...":["Checking connection...", "Comprobando conexión...", "Sprawdzanie połączenia..."],"🏆 ТОП-50":["🏆 TOP 50", "🏆 TOP 50", "🏆 TOP 50"],"↻ Обновить рейтинг":["↻ Refresh", "↻ Actualizar", "↻ Odśwież"],"Загрузка...":["Loading...", "Cargando...", "Wczytywanie..."],"МОЙ":["MY", "MI", "MOJE"],"АККАУНТ.":["ACCOUNT.", "CUENTA.", "KONTO."],"Создай аккаунт именно для PG//VERSE, чтобы сохранять игровой прогресс на сервере и участвовать в общем рейтинге. Не используй свой пароль Roblox.":["Create a PG//VERSE-only account to save progress online and enter the global leaderboard. Never use your Roblox password.", "Crea una cuenta específica de PG//VERSE para guardar el progreso online y entrar en la clasificación. No uses la contraseña de Roblox.", "Utwórz konto wyłącznie dla PG//VERSE, aby zapisywać postępy online i uczestniczyć w rankingu. Nie używaj hasła Roblox."],"Проверяем сервер...":["Checking server...", "Comprobando servidor...", "Sprawdzanie serwera..."],"В автономном HTML-режиме игра сохраняется в браузере. Для входа нужен запущенный сервер.":["Standalone HTML saves locally. Login requires a running server.", "La versión HTML guarda los datos localmente. Iniciar sesión requiere un servidor.", "Samodzielny HTML zapisuje dane lokalnie. Logowanie wymaga uruchomionego serwera."],"Вход":["Sign in", "Entrar", "Logowanie"],"Регистрация":["Register", "Registro", "Rejestracja"],"Войти в PG//VERSE":["Sign in to PG//VERSE", "Entrar a PG//VERSE", "Zaloguj do PG//VERSE"],"Зарегистрироваться в PG//VERSE":["Create a PG//VERSE account", "Crear cuenta PG//VERSE", "Utwórz konto PG//VERSE"],"Имя игрока (3–20 символов)":["Player name (3–20 chars)", "Nombre (3–20 caracteres)", "Nazwa gracza (3–20 znaków)"],"Пароль PG//VERSE (от 8 символов)":["PG//VERSE password (8+ chars)", "Contraseña PG//VERSE (mín. 8)", "Hasło PG//VERSE (min. 8 znaków)"],"ВОЙТИ":["SIGN IN", "ENTRAR", "ZALOGUJ"],"СОЗДАТЬ АККАУНТ":["REGISTER", "REGISTRARSE", "ZAREJESTRUJ"],"Для сайта создаётся отдельный пароль. Пароли не передаются в Roblox и хранятся на сервере в виде защищённых хешей.":["Create a separate password for this site. Passwords are never sent to Roblox and are stored as secure hashes.", "Usa una contraseña diferente. Nunca se envía a Roblox y se almacena como hash seguro.", "Użyj osobnego hasła. Nie jest ono wysyłane do Roblox i jest przechowywane jako bezpieczny skrót."],"✅ Аккаунт подключён":["✅ Connected account", "✅ Cuenta conectada", "✅ Konto połączone"],"Игрок:":["Player:", "Jugador:", "Gracz:"],"Прогресс синхронизируется":["Progress synchronizing", "Progreso sincronizado", "Synchronizacja postępu"],"☁️ Сохранить в облако":["☁️ Save to cloud", "☁️ Guardar en la nube", "☁️ Zapisz w chmurze"],"Выйти":["Log out", "Cerrar sesión", "Wyloguj"],"💾 Сохранение игры":["💾 Game saving", "💾 Guardado de juego", "💾 Zapis gry"],"Без аккаунта прогресс хранится в localStorage браузера. После регистрации игра синхронизируется с сервером: монеты, уровни, апгрейды, коллекция и квесты.":["Without an account, progress stays in the browser. After registering, coins, level, upgrades, inventory and quests sync to the server.", "Sin cuenta, el progreso queda en el navegador. Al registrarte se sincronizan monedas, niveles, mejoras, inventario y misiones.", "Bez konta postępy są w przeglądarce. Po rejestracji monety, poziomy, ulepszenia, ekwipunek i zadania synchronizują się z serwerem."],"Синхронизация работает только при работающем сервере и постоянном хранилище на хостинге. Таблица лидеров демонстрационная по балансу честности: игровые действия рассчитываются в браузере.":["Sync requires a running server and persistent hosting storage. Leaderboard is shared, but game actions are calculated in the browser, so it is not cheat-proof.", "La sincronización necesita servidor y almacenamiento persistente. La clasificación es compartida pero no es inmune a trampas.", "Synchronizacja wymaga serwera i trwałego dysku. Ranking jest wspólny, lecz nie jest odporny na oszustwa."],"36 улучшений":["32 upgrades", "32 mejoras", "32 ulepszenia"],"🔍 Найти улучшение...":["🔍 Search upgrades...", "🔍 Buscar mejoras...", "🔍 Szukaj ulepszeń..."],"ВСЕ":["ALL", "TODOS", "WSZYSTKIE"],"СКОРОСТЬ":["SPEED", "VELOCIDAD", "SZYBKOŚĆ"],"ШАНС":["CHANCE", "PROBABILIDAD", "SZANSA"],"ЭКОНОМИКА":["ECONOMY", "ECONOMÍA", "EKONOMIA"],"СКЛАД":["STORAGE", "ALMACÉN", "MAGAZYN"],"ОПЫТ":["XP", "EXPERIENCIA", "DOŚWIADCZENIE"],"СКИП":["SKIP", "SALTAR", "POMIŃ"],"ПОДСКАЗКИ":["HINTS", "PISTAS", "PODPOWIEDZI"],"Нет игроков. Стань первым!":["No players yet. Be the first!", "Aún no hay jugadores. ¡Sé el primero!", "Brak graczy. Bądź pierwszy!"],"Подключён к серверу":["Connected to server", "Conectado al servidor", "Połączono z serwerem"],"Сервер недоступен — локальный режим":["Server unavailable — local mode", "Servidor no disponible — modo local", "Serwer niedostępny — tryb lokalny"],"Рейтинг работает только при размещении полного проекта с backend.":["Leaderboard needs the full project with a backend.", "La clasificación requiere el proyecto completo con servidor.", "Ranking wymaga pełnego projektu z backendem."],"Чтобы попасть в топ, зарегистрируйся или войди в аккаунт.":["Register or sign in to join the leaderboard.", "Regístrate o inicia sesión para entrar en la clasificación.", "Zarejestruj się lub zaloguj, aby pojawić się w rankingu."],"Ник":["Name", "Nombre", "Nick"],"НАЙДЕНО":["FOUND", "ENCONTRADOS", "ZNALEZIONO"],"ЗАРАБОТАНО":["EARNED", "GANADO", "ZAROBIONO"],"РАНГ":["RANK", "RANGO", "RANGA"],"Ошибка входа или регистрации.":["Login or registration failed.", "Error al iniciar sesión o registrarse.", "Błąd logowania lub rejestracji."],"Синхронизировано с облаком":["Saved to cloud", "Guardado en la nube", "Zapisano w chmurze"],"Локальный режим — прогресс в браузере":["Local mode — browser saves progress", "Modo local — progreso en navegador", "Tryb lokalny — postępy w przeglądarce"],"Вход выполнен!":["Signed in!", "¡Sesión iniciada!", "Zalogowano!"],"До встречи!":["See you!", "¡Hasta pronto!", "Do zobaczenia!"],"ИГРОВОЕ МЕНЮ":["GAME MENU","MENÚ DEL JUEGO","MENU GRY"],"База ников":["NPC Database","Base de NPC","Baza nicków"],"Главная":["Home","Inicio","Strona główna"],"Маркетплейс":["Marketplace","Mercado","Rynek"],"Апгрейды":["Upgrades","Mejoras","Ulepszenia"],"Коллекция":["Collection","Colección","Kolekcja"],"денюшка создателю":["support the creator","una propina al creador","grosik dla twórcy"],"🎮 Это вымышленная игра.":["🎮 This is a fictional game.","🎮 Este juego es ficticio.","🎮 To fikcyjna gra."],"Никаких настоящих паролей, утечек или аккаунтов. Только виртуальные NPC и игровая валюта.":["No real passwords, leaks, or accounts. Only virtual NPCs and in-game currency.","Sin contraseñas, filtraciones ni cuentas reales. Solo NPC virtuales y monedas del juego.","Bez prawdziwych haseł, wycieków ani kont. Tylko wirtualne NPC i waluta w grze."],"Новичок":["Beginner","Principiante","Nowicjusz"],"БАЛАНС":["BALANCE","SALDO","SALDO"],"УРОВЕНЬ":["LEVEL","NIVEL","POZIOM"],"ХРАНИЛИЩЕ":["STORAGE","ALMACÉN","MAGAZYN"],"// THE GRIND STARTS HERE":["// YOUR JOURNEY STARTS HERE","// TU AVENTURA EMPIEZA AQUÍ","// TWOJA PRZYGODA ZACZYNA SIĘ TUTAJ"],"ЛОГИ.":["LOGS.","REGISTROS.","LOGI."],"ЛУТ.":["LOOT.","BOTÍN.","ŁUP."],"ПРОФИТ.":["PROFIT.","GANANCIA.","ZYSK."],"Выбирай NPC из базы ников, проверяй его игровые логи, ищи roblox.com и вводи USER + PASS ради виртуальных карточек.":["Choose an NPC, inspect fictional logs, find roblox.com, and enter USER + PASS to earn virtual cards.","Elige un NPC, revisa sus registros ficticios, busca roblox.com e introduce USER + PASS para ganar cartas virtuales.","Wybierz NPC, przeglądaj fikcyjne logi, znajdź roblox.com i wpisz USER + PASS, aby zdobywać wirtualne karty."],"СИМУЛЯТОР ОНЛАЙН":["SIMULATOR ONLINE","SIMULADOR EN LÍNEA","SYMULATOR ONLINE"],"Проверено логов":["Logs checked","Registros revisados","Sprawdzone logi"],"Обработанных наборов":["Log sets processed","Conjuntos procesados","Przetworzone zestawy"],"Найдено аккаунтов":["Accounts found","Cuentas encontradas","Znalezione konta"],"Найденных в логах NPC":["Found in NPC logs","Halladas en registros NPC","Znalezione w logach NPC"],"Заработано на рынке":["Marketplace earnings","Ganancias del mercado","Zarobki z rynku"],"Игровых монет":["In-game coins","Monedas del juego","Monety w grze"],"Лучший дроп":["Best drop","Mejor botín","Najlepszy łup"],"Максимальная редкость":["Highest rarity","Rareza máxima","Najwyższa rzadkość"],"// ОСНОВНОЙ РЕЖИМ":["// MAIN MODE","// MODO PRINCIPAL","// TRYB GŁÓWNY"],"ВЫБЕРИ":["CHOOSE","ELIGE","WYBIERZ"],"И ПРОВЕРЬ ЛОГИ":["AND CHECK LOGS","Y REVISA LOS REGISTROS","I SPRAWDŹ LOGI"],"Выбери NPC в базе ников, введи ник в LeakCheck, найди roblox.com и перепиши USER + PASS. Если Roblox нет — скипни аккаунт и выбери следующего.":["Pick an NPC in the database, enter its nickname in LeakCheck, find roblox.com, and copy USER + PASS. If Roblox is missing, skip and choose the next one.","Elige un NPC, escribe su apodo en LeakCheck, busca roblox.com y copia USER + PASS. Si no aparece Roblox, salta al siguiente.","Wybierz NPC z bazy, wpisz nick w LeakCheck, znajdź roblox.com i przepisz USER + PASS. Jeśli nie ma Roblox, pomiń i wybierz kolejnego."],"▶ ОТКРЫТЬ БАЗУ НИКОВ":["▶ OPEN NPC DATABASE","▶ ABRIR BASE DE NPC","▶ OTWÓRZ BAZĘ NICKÓW"],"🏆 УРОВНИ АККАУНТОВ":["🏆 ACCOUNT TIERS","🏆 NIVELES DE CUENTAS","🏆 POZIOMY KONT"],"от простых до ADMIN":["from basic to ADMIN","de básico a ADMIN","od zwykłych do ADMIN"],"Прокачивай":["Upgrade","Mejora","Ulepszaj"],"удачу":["luck","la suerte","szczęście"],"для редких находок и":["for rare drops and the","para conseguir botín raro y el","dla rzadkich łupów oraz"],"сканер":["scanner","escáner","skaner"],", чтобы Roblox чаще встречался в вымышленных логах.":["to find Roblox more often in fictional logs.","para que Roblox aparezca más en los registros ficticios.",", aby Roblox częściej pojawiał się w fikcyjnych logach."],"🎯 КВЕСТЫ И НАГРАДЫ":["🎯 QUESTS & REWARDS","🎯 MISIONES Y PREMIOS","🎯 ZADANIA I NAGRODY"],"выполни и забери":["complete to claim","complétalas y cobra","ukończ i odbierz"],"⚡ ПОСЛЕДНИЕ СОБЫТИЯ":["⚡ RECENT ACTIVITY","⚡ ACTIVIDAD RECIENTE","⚡ OSTATNIE ZDARZENIA"],"журнал игры":["game activity","actividad del juego","historia gry"],"ЧЁРНЫЙ":["BLACK","MERCADO","CZARNY"],"МАРКЕТ.":["MARKET.","NEGRO.","RYNEK."],"Продавай найденные в логах карточки с популярными предметами Roblox за игровые монеты. Ни настоящих предметов, ни аккаунтов тут нет.":["Sell cards featuring popular Roblox items for in-game coins. There are no real items or accounts here.","Vende cartas de objetos populares de Roblox por monedas del juego. Aquí no hay objetos ni cuentas reales.","Sprzedawaj karty z popularnymi przedmiotami Roblox za monety w grze. Nie ma tu prawdziwych przedmiotów ani kont."],"💰 Витрина твоих находок":["💰 Your finds on display","💰 Tus hallazgos","💰 Twoje znaleziska"],"Продавай карточки с коллекционными предметами Roblox по одной или сразу все. Апгрейд прибыли увеличивает выплаты.":["Sell collectible cards individually or all at once. The profit upgrade increases payouts.","Vende tus cartas coleccionables una por una o todas a la vez. La mejora de ganancias aumenta el pago.","Sprzedawaj kolekcjonerskie karty pojedynczo lub wszystkie naraz. Ulepszenie zysku zwiększa zarobki."],"ТВОИ ЛОТЫ":["YOUR LISTINGS","TUS ARTÍCULOS","TWOJE OFERTY"],"🪙 Продать всё":["🪙 Sell all","🪙 Vender todo","🪙 Sprzedaj wszystko"],"💸 Продать всё":["💸 Sell all","💸 Vender todo","💸 Sprzedaj wszystko"],"✨ ПРЕДМЕТЫ ROBLOX":["✨ ROBLOX ITEMS","✨ OBJETOS DE ROBLOX","✨ PRZEDMIOTY ROBLOX"],"возможный лут":["possible loot","botín posible","możliwy łup"],"После успешного LeakCheck выпадает случайная":["A successful LeakCheck gives a random","Un LeakCheck exitoso da una","Po udanym LeakCheck otrzymasz losową"],"игровая карточка предмета":["in-game item card","carta de objeto virtual","kartę wirtualnego przedmiotu"],". Чем реже найденный аккаунт, тем круче лут!":[". The rarer the account, the better the loot!",". ¡Cuanto más rara sea la cuenta, mejor será el botín!",". Im rzadsze konto, tym lepszy łup!"],"Это коллекционные копии внутри симулятора — предметы не выдаются в настоящем Roblox.":["These are collectibles within the simulator, not actual Roblox items.","Son coleccionables del simulador, no objetos reales de Roblox.","To kolekcjonerskie kopie w symulatorze, a nie prawdziwe przedmioty Roblox."],"МАГАЗИН":["UPGRADE","TIENDA DE","SKLEP"],"АПГРЕЙДОВ.":["SHOP.","MEJORAS.","ULEPSZEŃ."],"Ускоряй загрузку логов, повышай шанс Roblox-записи, ищи редкие профили и получай больше игровых монет.":["Load logs faster, raise the chance of a Roblox entry, find rare profiles, and earn more coins.","Carga registros más rápido, aumenta la probabilidad de Roblox, encuentra perfiles raros y gana más monedas.","Przyspieszaj ładowanie logów, zwiększaj szansę wpisu Roblox, znajduj rzadkie profile i zdobywaj monety."],"🛠 Стань топовым PG-игроком":["🛠 Become a top player","🛠 Conviértete en un jugador experto","🛠 Zostań mistrzem gry"],"Улучшения сохраняются автоматически, а при входе — ещё и на сервере. Каждый следующий уровень дороже предыдущего.":["Upgrades are saved in your browser. Each level costs more than the last.","Las mejoras se guardan en tu navegador. Cada nivel cuesta más.","Ulepszenia zapisują się w przeglądarce. Każdy kolejny poziom kosztuje więcej."],"БАЗА":["NPC","BAZA","BAZA"],"НИКОВ.":["DATABASE.","DE NPC.","NICKÓW."],"Здесь появляются вымышленные NPC-аккаунты. Выбери ник, введи его в LeakCheck и загрузи игровые записи. У некоторых персонажей нет записи Roblox — их можно пропустить.":["Here you will find fictional NPC accounts. Choose a nickname, enter it in LeakCheck and load its game records. Some NPCs have no Roblox entry — skip those.","Aquí aparecen cuentas ficticias de NPC. Elige un apodo, escríbelo en LeakCheck y carga sus registros. Algunos no tienen Roblox: puedes saltarlos.","Tutaj pojawiają się fikcyjne konta NPC. Wybierz nick, wpisz go w LeakCheck i wczytaj logi. Niektóre NPC nie mają wpisu Roblox — możesz je pominąć."],"ТОЛЬКО NPC":["NPC ONLY","SOLO NPC","TYLKO NPC"],"🗂️ Очередь для проверки":["🗂️ Queue to inspect","🗂️ Cola de revisión","🗂️ Kolejka do sprawdzenia"],"Ники придуманы игрой и не относятся к настоящим людям. После успешной проверки или скипа появится новый персонаж.":["Nicknames are randomly created and do not identify real people. A new character appears after each success or skip.","Los apodos son inventados y no pertenecen a personas reales. Aparece otro personaje tras cada acierto o salto.","Nicki są wymyślone i nie należą do prawdziwych osób. Po sukcesie lub pominięciu pojawi się nowa postać."],"ДОСТУПНЫЕ NPC":["AVAILABLE NPCs","NPC DISPONIBLES","DOSTĘPNE NPC"],"01. Выбери → 02. Проверь → 03. Найди USER + PASS":["01. Choose → 02. Check → 03. Find USER + PASS","01. Elige → 02. Revisa → 03. Busca USER + PASS","01. Wybierz → 02. Sprawdź → 03. Znajdź USER + PASS"],"🎮 КАК НАЧАТЬ":["🎮 HOW TO START","🎮 CÓMO EMPEZAR","🎮 JAK ZACZĄĆ"],"3 простых шага":["3 simple steps","3 pasos sencillos","3 proste kroki"],"Выбери NPC":["Choose an NPC","Elige un NPC","Wybierz NPC"],"Возьми ник из базы или запомни его.":["Pick a nickname from the database or remember it.","Elige un apodo de la base de datos o memorízalo.","Wybierz nick z bazy lub go zapamiętaj."],"Запусти LeakCheck":["Start LeakCheck","Inicia LeakCheck","Uruchom LeakCheck"],"Введи ник из списка и загрузи записи этого NPC.":["Enter a listed nickname and load the NPC's records.","Introduce un apodo de la lista y carga sus registros.","Wpisz nick z listy i wczytaj logi NPC."],"Найди Roblox":["Find Roblox","Encuentra Roblox","Znajdź Roblox"],"Перепиши USER и игровой PASS, либо пропусти аккаунт.":["Copy USER and the fictional PASS, or skip this account.","Copia USER y PASS ficticios, o salta esta cuenta.","Przepisz USER i fikcyjne PASS albo pomiń konto."],"Сначала введи ник вымышленного NPC из":["First, enter a fictional NPC nickname from the","Primero escribe el apodo de un NPC ficticio de la","Najpierw wpisz nick fikcyjnego NPC z"],"«Базы ников»":["NPC Database","base de NPC","bazy nicków"],". Затем просмотри его игровые логи: найди":[". Then inspect its fictional logs: find",". Luego revisa sus registros ficticios: busca",". Następnie sprawdź jego fikcyjne logi: znajdź"],", введи USER и PASS. Если Roblox нет — скипни NPC.":[", enter USER and PASS. If Roblox is missing, skip the NPC.",", introduce USER y PASS. Si no hay Roblox, salta el NPC.",", wpisz USER i PASS. Jeśli nie ma Roblox, pomiń NPC."],"Вымышленные стилер-логи · 100% игровая симуляция":["Fictional logs · 100% in-game simulation","Registros ficticios · simulación 100 %","Fikcyjne logi · symulacja w 100%"],"Все записи, ники и пароли SIM_* сгенерированы локально. Никаких настоящих утечек, проверок чужих профилей и подключений к Roblox.":["All records, nicknames and SIM_* passwords are created locally. No real leaks, account checks or Roblox connections.","Todos los registros, apodos y contraseñas SIM_* se crean localmente. Sin filtraciones reales ni conexión con Roblox.","Wszystkie logi, nicki i hasła SIM_* są tworzone lokalnie. Bez prawdziwych wycieków, sprawdzania kont i połączeń z Roblox."],"ШАГ 01":["STEP 01","PASO 01","KROK 01"],"ШАГ 02":["STEP 02","PASO 02","KROK 02"],"ВВЕДИ НИК NPC":["ENTER NPC NICKNAME","INTRODUCE EL APODO","WPISZ NICK NPC"],"☷ ОТКРЫТЬ БАЗУ НИКОВ":["☷ OPEN NPC DATABASE","☷ ABRIR BASE DE NPC","☷ OTWÓRZ BAZĘ NICKÓW"],"↳ НАЙТИ ЛОГИ":["↳ FIND LOGS","↳ BUSCAR REGISTROS","↳ ZNAJDŹ LOGI"],"Выбери NPC из базы или введи его ник вручную.":["Select an NPC from the database or type its nickname.","Elige un NPC de la base o escribe su apodo.","Wybierz NPC z bazy lub wpisz jego nick."],"LOG #0001 · ОЖИДАНИЕ":["LOG #0001 · WAITING","LOG #0001 · EN ESPERA","LOG #0001 · OCZEKIWANIE"],"Лог 1":["Log 1","Registro 1","Log 1"],"Сначала введи ник NPC и нажми «Найти логи».":["Enter an NPC nickname and press “Find logs”.","Escribe el apodo de un NPC y pulsa «Buscar registros».","Wpisz nick NPC i kliknij „Znajdź logi”."],"НАЙДИ USER + PASS НА ROBLOX.COM":["FIND USER + PASS FOR ROBLOX.COM","BUSCA USER + PASS DE ROBLOX.COM","ZNAJDŹ USER + PASS DLA ROBLOX.COM"],"USER ИЗ СТРОКИ ROBLOX.COM":["USER FROM ROBLOX.COM ENTRY","USER DE LA LÍNEA ROBLOX.COM","USER Z WIERSZA ROBLOX.COM"],"PASS ИЗ ТОЙ ЖЕ СТРОКИ":["PASS FROM THE SAME ENTRY","PASS DE LA MISMA LÍNEA","PASS Z TEGO SAMEGO WIERSZA"],"✓ ПРОВЕРИТЬ USER + PASS":["✓ CHECK USER + PASS","✓ COMPROBAR USER + PASS","✓ SPRAWDŹ USER + PASS"],"⏭ СКИПНУТЬ NPC":["⏭ SKIP NPC","⏭ SALTAR NPC","⏭ POMIŃ NPC"],"📡 РАДАР":["📡 RADAR","📡 RADAR","📡 RADAR"],"☷ К БАЗЕ НИКОВ":["☷ BACK TO NPC DATABASE","☷ VOLVER A BASE DE NPC","☷ DO BAZY NICKÓW"],"Введи ник из базы, чтобы открыть игровые записи персонажа.":["Enter a nickname from the database to view fictional records.","Escribe un apodo de la base para ver los registros ficticios.","Wpisz nick z bazy, aby zobaczyć fikcyjne logi."],"📊 ТВОЯ СТАТИСТИКА":["📊 YOUR STATS","📊 TUS ESTADÍSTICAS","📊 TWOJE STATYSTYKI"],"ЛОГОВ ПРОВЕРЕНО":["LOGS CHECKED","REGISTROS REVISADOS","SPRAWDZONE LOGI"],"АККАУНТОВ НАЙДЕНО":["ACCOUNTS FOUND","CUENTAS ENCONTRADAS","ZNALEZIONE KONTA"],"СКИПОВ":["SKIPPED","SALTADOS","POMINIĘTE"],"СЕРИЯ НАХОДОК":["FIND STREAK","RACHA DE HALLAZGOS","SERIA ZNALEZISK"],"🧭 КАК ИГРАТЬ":["🧭 HOW TO PLAY","🧭 CÓMO JUGAR","🧭 JAK GRAĆ"],"Возьми ник NPC в":["Get an NPC nickname from the","Toma un apodo de la","Weź nick NPC z"],"базе ников":["NPC database","base de NPC","bazy nicków"],"Введи его и открой":["Enter it and open the","Escríbelo y abre los","Wpisz go i otwórz"],"логи персонажа":["character's logs","registros del personaje","logi postaci"],"Найди":["Find","Encuentra","Znajdź"],", впиши":[", enter",", introduce",", wpisz"],"Если Roblox нет,":["If Roblox is absent,","Si no hay Roblox,","Jeśli nie ma Roblox,"],"скипни NPC":["skip the NPC","salta el NPC","pomiń NPC"],"✨ Roblox есть не в каждом логе. Апгрейды влияют на вероятность, но никогда не делают её 100%.":["✨ Not every log has Roblox. Upgrades improve the odds but never make them 100%.","✨ Roblox no aparece en todos los registros. Las mejoras aumentan la probabilidad, pero nunca al 100 %.","✨ Nie każdy log zawiera Roblox. Ulepszenia zwiększają szansę, ale nigdy do 100%."],"↑ ПРОКАЧАТЬ СКАНЕР":["↑ UPGRADE SCANNER","↑ MEJORAR ESCÁNER","↑ ULEPSZ SKANER"],"🎁 НАГРАДЫ":["🎁 REWARDS","🎁 RECOMPENSAS","🎁 NAGRODY"],"МОЯ":["MY","MI","MOJA"],"КОЛЛЕКЦИЯ.":["COLLECTION.","COLECCIÓN.","KOLEKCJA."],"Виртуальные аккаунты с популярными вещами Roblox из игровых логов. Находи Shaggy, Valkyrie, Dominus и другие коллекционные карточки!":["Virtual accounts with popular Roblox items from fictional logs. Find Shaggy, Valkyrie, Dominus and more collectible cards!","Cuentas virtuales con objetos populares de Roblox de registros ficticios. ¡Encuentra Shaggy, Valkyrie, Dominus y más cartas!","Wirtualne konta z popularnymi przedmiotami Roblox z fikcyjnych logów. Zdobywaj Shaggy, Valkyrie, Dominus i inne karty!"],"ИНВЕНТАРЬ":["INVENTORY","INVENTARIO","EKWIPUNEK"],"Сначала новые":["Newest first","Más recientes","Najnowsze"],"По стоимости":["By price","Por precio","Według ceny"],"По редкости":["By rarity","Por rareza","Według rzadkości"],"🏅 ОТКРЫТЫЕ ДОСТИЖЕНИЯ":["🏅 UNLOCKED ACHIEVEMENTS","🏅 LOGROS DESBLOQUEADOS","🏅 ODBLOKOWANE OSIĄGNIĘCIA"],"за лучший дроп":["for your best drop","por tu mejor botín","za najlepszy łup"],"PG//VERSE — неофициальный автономный симулятор, не связан с Roblox. Все NPC и пароли SIM_* вымышлены, никогда не проверяются на настоящих сайтах и не покидают браузер.":["PG//VERSE is an unofficial offline simulator, not affiliated with Roblox. All NPCs and SIM_* passwords are fictional, never checked on real websites, and stay in your browser.","PG//VERSE es un simulador independiente no oficial, sin relación con Roblox. Todos los NPC y contraseñas SIM_* son ficticios y permanecen en tu navegador.","PG//VERSE to nieoficjalny symulator niezwiązany z Roblox. Wszystkie NPC i hasła SIM_* są fikcyjne, nie są sprawdzane w prawdziwych serwisach i pozostają w przeglądarce."],"Сбросить игру":["Reset game","Reiniciar juego","Zresetuj grę"],"Награда!":["Reward!","¡Recompensa!","Nagroda!"],"ЗАБРАТЬ И ПРОДОЛЖИТЬ":["CLAIM & CONTINUE","COBRAR Y CONTINUAR","ODBIERZ I GRAJ DALEJ"],"НЕ ПРОВЕРЕН":["NOT CHECKED","SIN REVISAR","NIESPRAWDZONY"],"ПРОВЕРЯЛСЯ":["CHECKED","REVISADO","SPRAWDZONY"],"НЕИЗВЕСТНО":["UNKNOWN","DESCONOCIDO","NIEZNANE"],"СОЗДАНЫ":["CREATED","CREADOS","UTWORZONE"],"Ожидание":["Waiting","En espera","Oczekiwanie"],"Ищи roblox.com, скопируй USER и PASS. Пароли начинаются на SIM_":["Find roblox.com, copy USER and PASS. Passwords begin with SIM_","Busca roblox.com y copia USER y PASS. Las contraseñas empiezan por SIM_","Znajdź roblox.com, przepisz USER i PASS. Hasła zaczynają się od SIM_"],"Введите ник только из игровой базы NPC.":["Enter a nickname from the in-game NPC database.","Introduce un apodo de la base NPC del juego.","Wpisz nick z bazy NPC w grze."],"◉ SCANNING":["◉ SCANNING","◉ BUSCANDO","◉ SKANOWANIE"],"● READY":["● READY","● LISTO","● GOTOWE"],"● STANDBY":["● STANDBY","● EN ESPERA","● OCZEKIWANIE"],"ПОИСК ЛОГОВ NPC":["SEARCHING NPC LOGS","BUSCANDO REGISTROS NPC","SZUKANIE LOGÓW NPC"],"ВВЕДИ НИК ДЛЯ ПОИСКА":["ENTER NICKNAME TO SEARCH","ESCRIBE EL APODO","WPISZ NICK DO WYSZUKANIA"],"Ищем сгенерированные записи выбранного NPC...":["Searching fictional records for the selected NPC...","Buscando registros ficticios del NPC...","Szukanie fikcyjnych logów wybranego NPC..."],"Сначала введи ник NPC из базы и нажми «Найти логи».":["Enter a nickname from the NPC database and click “Find logs”.","Escribe un apodo de la base NPC y pulsa «Buscar registros».","Wpisz nick z bazy NPC i kliknij „Znajdź logi”."],"Логи будут созданы только для персонажа с таким ником.":["Logs are generated only for this fictional NPC.","Los registros se generan solo para este NPC ficticio.","Logi są generowane tylko dla tego fikcyjnego NPC."],"↳ В LEAKCHECK":["↳ OPEN LEAKCHECK","↳ ABRIR LEAKCHECK","↳ OTWÓRZ LEAKCHECK"],"🔦 ПОДСКАЗКА":["🔦 HINT","🔦 PISTA","🔦 PODPOWIEDŹ"],"🔒 РАДАР":["🔒 RADAR","🔒 RADAR","🔒 RADAR"],"ПРОДАТЬ":["SELL","VENDER","SPRZEDAJ"],"Открыто!":["Unlocked!","¡Desbloqueado!","Odblokowane!"],"Найди уровень аккаунта":["Find this account tier","Encuentra este nivel de cuenta","Znajdź ten poziom konta"],"✓ Взято":["✓ Claimed","✓ Cobrado","✓ Odebrane"],"Пока тихо. Найди первую карточку в LeakCheck!":["It's quiet so far. Find your first card in LeakCheck!","Todo tranquilo por ahora. ¡Encuentra tu primera carta en LeakCheck!","Na razie cisza. Znajdź pierwszą kartę w LeakCheck!"],"Инвентарь пуст.":["Inventory is empty.","El inventario está vacío.","Ekwipunek jest pusty."],"Найди USER + PASS в LeakCheck и получи карточку предмета Roblox.":["Find USER + PASS in LeakCheck to earn a Roblox item card.","Encuentra USER + PASS en LeakCheck para ganar una carta de objeto Roblox.","Znajdź USER + PASS w LeakCheck, aby zdobyć kartę przedmiotu Roblox."],"🔎 В LEAKCHECK":["🔎 OPEN LEAKCHECK","🔎 ABRIR LEAKCHECK","🔎 DO LEAKCHECK"],"МАКСИМУМ":["MAX LEVEL","NIVEL MÁXIMO","MAKSIMUM"],"АПГРЕЙД ↑":["UPGRADE ↑","MEJORAR ↑","ULEPSZ ↑"],"ОБЫЧНЫЙ":["COMMON","COMÚN","ZWYKŁY"],"НЕОБЫЧНЫЙ":["UNCOMMON","POCO COMÚN","NIEZWYKŁY"],"РЕДКИЙ":["RARE","RARO","RZADKI"],"ЭПИЧЕСКИЙ":["EPIC","ÉPICO","EPICKI"],"ЛЕГЕНДАРНЫЙ":["LEGENDARY","LEGENDARIO","LEGENDARNY"],"МИФИЧЕСКИЙ":["MYTHIC","MÍTICO","MITYCZNY"],"2020 · НУБ":["2020 · NOOB","2020 · NOVATO","2020 · NOOB"],"2018 · ОЛДСКУЛ":["2018 · OLD SCHOOL","2018 · CLÁSICO","2018 · STARA SZKOŁA"],"2015 · ВЕТЕРАН":["2015 · VETERAN","2015 · VETERANO","2015 · WETERAN"],"2011 · OG":["2011 · OG","2011 · OG","2011 · OG"],"2007 · ЛЕГЕНДА":["2007 · LEGEND","2007 · LEYENDA","2007 · LEGENDA"],"ADMIN//SIM · 2006":["ADMIN//SIM · 2006","ADMIN//SIM · 2006","ADMIN//SIM · 2006"],"Кибер-легенда":["Cyber Legend","Leyenda cibernética","Cyberlegenda"],"LOG-МАСТЕР":["LOG MASTER","MAESTRO DE REGISTROS","MISTRZ LOGÓW"],"Про-игрок":["Pro Player","Jugador experto","Pro gracz"],"Скаут":["Scout","Explorador","Zwiadowca"],"БЫСТРЫЙ ИМПОРТ":["FAST IMPORT","IMPORTACIÓN RÁPIDA","SZYBKI IMPORT"],"Сокращает время загрузки нового игрового лога.":["Reduces loading time for new fictional logs.","Reduce el tiempo de carga de registros ficticios.","Skraca czas ładowania fikcyjnych logów."],"ШАНС РЕДКОСТИ":["RARITY BOOST","MEJORA DE RAREZA","SZANSA NA RZADKOŚĆ"],"Повышает вероятность получить редкого, OG или ADMIN//SIM после правильного ника.":["Raises the chance of rare, OG, or ADMIN//SIM rewards.","Aumenta la probabilidad de recompensas raras, OG o ADMIN//SIM.","Zwiększa szansę na rzadkie, OG i ADMIN//SIM nagrody."],"МАРКЕТИНГ":["MARKETING","MARKETING","MARKETING"],"Повышает цену продажи каждой виртуальной карточки.":["Raises the sale price of virtual cards.","Aumenta el precio de venta de las cartas virtuales.","Zwiększa cenę sprzedaży wirtualnych kart."],"СКЛАД НАХОДОК":["CARD STORAGE","ALMACÉN DE CARTAS","MAGAZYN KART"],"Добавляет слоты для виртуальных аккаунтов в инвентаре.":["Adds inventory slots for virtual accounts.","Añade espacios para cuentas virtuales al inventario.","Dodaje miejsca na wirtualne konta w ekwipunku."],"СКАНЕР ДОМЕНОВ":["DOMAIN SCANNER","ESCÁNER DE DOMINIOS","SKANER DOMEN"],"Увеличивает шанс появления roblox.com в новых игровых логах. Не выше 76%.":["Increases the chance of roblox.com appearing in fictional logs, up to 76%.","Aumenta la probabilidad de roblox.com en los registros ficticios, hasta un 76 %.","Zwiększa szansę wpisu roblox.com w fikcyjnych logach, maksymalnie do 76%."],"Разблокирует подсказку: есть ли roblox.com и в какой строке. USER и PASS вводятся вручную.":["Unlocks a hint showing whether roblox.com appears and on which row. Enter USER and PASS yourself.","Desbloquea una pista que indica si aparece roblox.com y en qué línea. Introduce USER y PASS manualmente.","Odblokowuje wskazówkę, czy roblox.com jest w logach i w którym wierszu. USER i PASS wpisujesz samodzielnie."],"ПАРОЛЬНЫЙ БОНУС":["PASSWORD BONUS","BONO DE CONTRASEÑA","BONUS ZA HASŁO"],"Увеличивает награду монетами за правильную пару игровых USER + PASS.":["Increases coin rewards for a correct fictional USER + PASS pair.","Aumenta las monedas por una pareja correcta de USER + PASS ficticios.","Zwiększa nagrody w monetach za poprawną fikcyjną parę USER + PASS."],"Радар доступен":["Radar unlocked","Radar desbloqueado","Radar odblokowany"],"Один уровень":["One level","Un nivel","Jeden poziom"],"Охотник за логами":["Log Hunter","Cazador de registros","Łowca logów"],"Обработай 5 виртуальных логов":["Process 5 fictional logs","Procesa 5 registros ficticios","Przetwórz 5 fikcyjnych logów"],"Торговец":["Trader","Comerciante","Handlarz"],"Продай 3 виртуальных аккаунта":["Sell 3 virtual accounts","Vende 3 cuentas virtuales","Sprzedaj 3 wirtualne konta"],"Раритет":["Rare Find","Hallazgo raro","Rarytas"],"Найди карточку уровня 2015 или выше":["Find a card from 2015 or earlier","Encuentra una carta de 2015 o anterior","Znajdź kartę z 2015 lub starszą"],"Быстрый выбор":["Quick Skip","Salto rápido","Szybki wybór"],"Пропусти 4 ненужных лога":["Skip 4 unwanted logs","Salta 4 registros innecesarios","Pomiń 4 niepotrzebne logi"],"Игра сброшена!":["Game reset!","¡Juego reiniciado!","Gra zresetowana!"],"🎒 Нет свободных слотов.":["🎒 No free slots.","🎒 No quedan espacios.","🎒 Brak wolnych miejsc."],"🔒 Купи LOG RADAR в апгрейдах.":["🔒 Buy LOG RADAR in Upgrades.","🔒 Compra LOG RADAR en Mejoras.","🔒 Kup LOG RADAR w Ulepszeniach."],"Сначала введи ник NPC из «Базы ников».":["Enter a nickname from the NPC Database first.","Primero escribe un apodo de la base de NPC.","Najpierw wpisz nick z bazy NPC."],"Такого NPC нет в игровой базе. Выбери ник из списка.":["This NPC isn't in the database. Pick a listed nickname.","Este NPC no está en la base. Elige uno de la lista.","Tego NPC nie ma w bazie. Wybierz nick z listy."],"❌ Ник не найден в игровой базе NPC.":["❌ Nickname not found in the NPC database.","❌ No se encontró el apodo en la base de NPC.","❌ Nie znaleziono nicku w bazie NPC."],"Подготавливаем игровые логи NPC…":["Preparing fictional NPC logs…","Preparando los registros ficticios…","Przygotowywanie fikcyjnych logów NPC…"],"Найди roblox.com, затем впиши USER и PASS из одной строки. Если сайта нет — скипни NPC.":["Find roblox.com, then enter USER and PASS from the same row. If it's missing, skip the NPC.","Busca roblox.com e introduce USER y PASS de la misma línea. Si no aparece, salta el NPC.","Znajdź roblox.com i wpisz USER oraz PASS z tego samego wiersza. Jeśli go nie ma, pomiń NPC."],"Впиши оба поля: USER и PASS из одной строки roblox.com.":["Fill both fields: USER and PASS from the same roblox.com row.","Rellena USER y PASS de la misma línea roblox.com.","Wpisz USER i PASS z tego samego wiersza roblox.com."],"У этого NPC нет записи roblox.com. Нажми «Скипнуть NPC».":["This NPC has no roblox.com entry. Click “Skip NPC”.","Este NPC no tiene roblox.com. Pulsa «Saltar NPC».","Ten NPC nie ma wpisu roblox.com. Kliknij „Pomiń NPC”."],"USER не совпадает с ником в строке roblox.com.":["USER doesn't match the roblox.com entry.","USER no coincide con el de la línea roblox.com.","USER nie zgadza się z wpisem roblox.com."],"❌ Неверный игровой USER.":["❌ Incorrect fictional USER.","❌ USER ficticio incorrecto.","❌ Niepoprawny fikcyjny USER."],"PASS не совпадает. Найди пароль SIM_* в строке roblox.com.":["PASS doesn't match. Find the SIM_* password in the roblox.com entry.","PASS no coincide. Busca la contraseña SIM_* en la línea roblox.com.","PASS nie zgadza się. Znajdź hasło SIM_* we wpisie roblox.com."],"❌ Неверный игровой PASS.":["❌ Incorrect fictional PASS.","❌ PASS ficticio incorrecto.","❌ Niepoprawny fikcyjny PASS."],"🎒 Склад заполнен! Продай карточки в маркетплейсе.":["🎒 Storage is full! Sell cards on the marketplace.","🎒 ¡Almacén lleno! Vende cartas en el mercado.","🎒 Magazyn pełny! Sprzedaj karty na rynku."],"✓ Игровая пара USER + PASS найдена, карточка добавлена.":["✓ Correct fictional USER + PASS! Card added.","✓ ¡USER + PASS ficticios correctos! Carta añadida.","✓ Poprawne fikcyjne USER + PASS! Dodano kartę."],"📡 Радар: roblox.com отсутствует. Скипни NPC.":["📡 Radar: no roblox.com entry. Skip this NPC.","📡 Radar: no aparece roblox.com. Salta este NPC.","📡 Radar: brak roblox.com. Pomiń NPC."],"Сбросить монеты, NPC, инвентарь, логи и апгрейды?":["Reset coins, NPCs, inventory, logs and upgrades?","¿Reiniciar monedas, NPC, inventario, registros y mejoras?","Zresetować monety, NPC, ekwipunek, logi i ulepszenia?"],"✓ | ":["✓ | ","✓ | ","✓ | "],"Например: SimBlock_1234":["For example: SimBlock_1234","Por ejemplo: SimBlock_1234","Na przykład: SimBlock_1234"],"Ник NPC из базы":["NPC nickname from database","Apodo NPC de la base","Nick NPC z bazy"],"Игровой USER":["Fictional USER","USER ficticio","Fikcyjny USER"],"Пароль SIM_*":["SIM_* password","Contraseña SIM_*","Hasło SIM_*"],"Показать пароль":["Show password","Mostrar contraseña","Pokaż hasło"],"Награда за проверку лога":["Reward for checking a log","Recompensa por revisar un registro","Nagroda za sprawdzenie logu"],"Сортировка коллекции":["Sort collection","Ordenar colección","Sortuj kolekcję"],"Основная навигация":["Main navigation","Navegación principal","Nawigacja główna"],"Пропустить NPC без награды":["Skip NPC without a reward","Saltar NPC sin recompensa","Pomiń NPC bez nagrody"]};
+I18N['Язык']=['Language','Idioma','Język'];I18N['БАЗА'][1]='BASE';
+Object.assign(I18N,{"ЗАБРАТЬ И К БАЗЕ НИКОВ": ["CLAIM & BACK TO DATABASE", "COBRAR Y VOLVER A LA BASE", "ODBIERZ I WRÓĆ DO BAZY"], "Роблокс": ["Roblox", "Roblox", "Roblox"], "Уровень": ["Level", "Nivel", "Poziom"], "ЛОГИ NPC": ["NPC LOGS", "REGISTROS NPC", "LOGI NPC"], "Нужно ещё": ["Need more", "Faltan", "Potrzeba jeszcze"], "Найдено": ["Found", "Encontrado", "Znaleziono"], "Логи": ["Logs", "Registros", "Logi"], "Игровой профиль": ["Fictional profile", "Perfil ficticio", "Fikcyjny profil"], "УР.": ["LVL", "NIV.", "POZ."], "Раритет": ["Rare Find", "Hallazgo raro", "Rarytas"], "Один уровень": ["One level", "Un nivel", "Jeden poziom"], "Лог": ["Log", "Registro", "Log"], "Радар доступен": ["Radar unlocked", "Radar desbloqueado", "Radar odblokowany"]});
+Object.assign(I18N,{"// BUY • SELL • REPEAT": ["// BUY • SELL • REPEAT", "// COMPRA • VENDE • REPITE", "// KUPUJ • SPRZEDAWAJ • POWTARZAJ"], "// POWER UP YOUR SIM": ["// POWER UP YOUR SIM", "// MEJORA TU SIMULADOR", "// ULEPSZAJ SWÓJ SYMULATOR"], "// NPC DATABASE • SELECT A TARGET": ["// NPC DATABASE • CHOOSE AN NPC", "// BASE DE NPC • ELIGE UN NPC", "// BAZA NPC • WYBIERZ POSTAĆ"], "// ENTER NICK • OPEN LOG • FIND PASSWORD": ["// ENTER NICK • OPEN LOG • FIND PASS", "// APODO • REGISTROS • CONTRASEÑA", "// NICK • LOG • HASŁO"], "// SHOW OFF YOUR LOOT": ["// SHOW OFF YOUR LOOT", "// PRESUME DE BOTÍN", "// POKAŻ SWÓJ ŁUP"], "◈ SIMULATED LOG VIEWER": ["◈ SIMULATED LOG VIEWER", "◈ VISOR DE REGISTROS FICTICIOS", "◈ PODGLĄD FIKCYJNYCH LOGÓW"], "● ACTIVE": ["● ACTIVE", "● ACTIVO", "● AKTYWNY"], "PLAY": ["PLAY", "JUGAR", "GRAJ"], "LOCAL SIMULATION": ["LOCAL SIMULATION", "SIMULACIÓN LOCAL", "SYMULACJA LOKALNA"], "PG COMPLETED": ["PG COMPLETED", "PG COMPLETADO", "PG UKOŃCZONE"], "● 0 RECORDS": ["● 0 RECORDS", "● 0 REGISTROS", "● 0 WPISÓW"]});
+
+Object.assign(I18N, {
+ "ОХОТА ЗА":["HUNT FOR ","A LA CAZA DE ","POLOWANIE NA "],
+ "ЛЕГЕНДАМИ.":["LEGENDS.","LEYENDAS.","LEGENDY."],
+ "Находи игровые карточки редких предметов, прокачивай сканер и собирай коллекцию.":["Discover rare virtual collectible cards, upgrade your scanner and build your collection.","Encuentra cartas virtuales raras, mejora el escáner y amplía tu colección.","Zdobywaj rzadkie wirtualne karty, rozwijaj skaner i buduj kolekcję."],
+ "◆ ОТКРЫТЬ LEAKCHECK":["◆ OPEN LEAKCHECK ","◆ ABRIR LEAKCHECK ","◆ OTWÓRZ LEAKCHECK "]
+});
+const I18N_PATTERNS=[["^Игровой профиль · эпоха (\\d+)$",["Fictional profile · era {1}","Perfil ficticio · época {1}","Fikcyjny profil · rocznik {1}"]],["^Логи: (СОЗДАНЫ|НЕИЗВЕСТНО)$",["Logs: {1}","Registros: {1}","Logi: {1}"]],["^● ЛОГИ NPC: (.*) · #(\\d+)$",["● NPC LOGS: {1} · #{2}","● REGISTROS NPC: {1} · #{2}","● LOGI NPC: {1} · #{2}"]],["^● ВЫБРАН: (.*) · Нажми «Найти логи»$",["● SELECTED: {1} · Click “Find logs”","● ELEGIDO: {1} · Pulsa «Buscar registros»","● WYBRANO: {1} · Kliknij „Znajdź logi”"]],["^Лог #(\\d+)$",["Log #{1}","Registro #{1}","Log #{1}"]],["^Ник (.*) выбран\\. Нажми «Найти логи»\\.$",["Nickname {1} selected. Click “Find logs”.","Apodo {1} elegido. Pulsa «Buscar registros».","Wybrano nick {1}. Kliknij „Znajdź logi”."]],["^⏭ NPC (.*) заменён без награды\\.$",["⏭ NPC {1} replaced without reward.","⏭ NPC {1} reemplazado sin premio.","⏭ NPC {1} zastąpiono bez nagrody."]],["^📡 Roblox обнаружен в строке #(\\d+)\\. Впиши USER и PASS вручную\\.$",["📡 Roblox found in row #{1}. Enter USER and PASS yourself.","📡 Roblox aparece en la línea #{1}. Introduce USER y PASS.","📡 Roblox znaleziono w wierszu #{1}. Wpisz USER i PASS."]],["^🎁 Выпал предмет: (.*)! Это виртуальный лут аккаунта NPC, а не реальный предмет Roblox\\. За проверку: \\+(.+) 🪙\\.$",["🎁 Item dropped: {1}! Virtual NPC loot, not a real Roblox item. Reward: +{2} 🪙.","🎁 ¡Objeto obtenido: {1}! Botín virtual del NPC, no un objeto real de Roblox. Premio: +{2} 🪙.","🎁 Wylosowano: {1}! Wirtualny łup NPC, nie prawdziwy przedmiot Roblox. Nagroda: +{2} 🪙."]],["^Цена карточки: (.*) 🪙$",["Card value: {1} 🪙","Valor de la carta: {1} 🪙","Wartość karty: {1} 🪙"]],["^🔐 SIM PASS$",["🔐 SIM PASS","🔐 SIM PASS","🔐 SIM PASS"]],["^Лог: (.*)$",["Log: {1}","Registro: {1}","Log: {1}"]],["^Редкость: \\+(\\d+)%$",["Rarity: +{1}%","Rareza: +{1}%","Rzadkość: +{1}%"]],["^Доход: \\+(\\d+)%$",["Income: +{1}%","Ganancia: +{1}%","Zysk: +{1}%"]],["^(\\d+) слотов$",["{1} slots","{1} espacios","{1} miejsc"]],["^(\\d+)% шанс Roblox$",["{1}% Roblox chance","{1}% probabilidad de Roblox","{1}% szansa Roblox"]],["^Бонус: \\+(\\d+)%$",["Bonus: +{1}%","Bono: +{1}%","Bonus: +{1}%"]],["^(\\d+(?:\\.\\d+)?) сек / лог$",["{1} sec / log","{1} s / registro","{1} s / log"]],["^(.*) · УР\\. (\\d+)/(\\d+)$",["{1} · LVL {2}/{3}","{1} · NIV. {2}/{3}","{1} · POZ. {2}/{3}"]],["^🎒 Нет свободных слотов\\.$",["🎒 No free slots.","🎒 Sin espacios libres.","🎒 Brak wolnych miejsc."]],["^Новый уровень (\\d+)! \\+(.*) 🪙$",["New level {1}! +{2} 🪙","¡Nuevo nivel {1}! +{2} 🪙","Nowy poziom {1}! +{2} 🪙"]],["^⭐ Уровень (\\d+)! Бонус (.*) монет\\.$",["⭐ Level {1}! Bonus: {2} coins.","⭐ ¡Nivel {1}! Bono: {2} monedas.","⭐ Poziom {1}! Bonus: {2} monet."]],["^⏭ NPC пропущен! \\+(\\d+) 🪙\\. Выбери следующего\\.$",["⏭ NPC skipped! +{1} 🪙. Choose the next one.","⏭ ¡NPC saltado! +{1} 🪙. Elige otro.","⏭ Pominięto NPC! +{1} 🪙. Wybierz następnego."]],["^NPC (.+) пропущен \\(\\+(\\d+) 🪙\\)$",["NPC {1} skipped (+{2} 🪙)","NPC {1} saltado (+{2} 🪙)","Pominięto NPC {1} (+{2} 🪙)"]],["^Продан (.+) за (.+) 🪙$",["Sold {1} for {2} 🪙","Vendido {1} por {2} 🪙","Sprzedano {1} za {2} 🪙"]],["^💸 Продано: (.+) · \\+(.*) 🪙$",["💸 Sold: {1} · +{2} 🪙","💸 Vendido: {1} · +{2} 🪙","💸 Sprzedano: {1} · +{2} 🪙"]],["^Продано (\\d+) карточек за (.*) 🪙$",["Sold {1} cards for {2} 🪙","Vendidas {1} cartas por {2} 🪙","Sprzedano {1} kart za {2} 🪙"]],["^💰 Все проданы: \\+(.*) 🪙$",["💰 All sold: +{1} 🪙","💰 Todo vendido: +{1} 🪙","💰 Sprzedano wszystkie: +{1} 🪙"]],["^🪙 Нужно ещё (.*) монет\\.$",["🪙 Need {1} more coins.","🪙 Faltan {1} monedas.","🪙 Potrzeba jeszcze {1} monet."]],["^Апгрейд «(.+)» — ур\\. (\\d+)$",["Upgrade “{1}” — level {2}","Mejora «{1}» — nivel {2}","Ulepszenie „{1}” — poziom {2}"]],["^✅ (.+): уровень (\\d+)$",["✅ {1}: level {2}","✅ {1}: nivel {2}","✅ {1}: poziom {2}"]],["^Квест «(.+)»: \\+(\\d+) 🪙$",["Quest “{1}”: +{2} 🪙","Misión «{1}»: +{2} 🪙","Zadanie „{1}”: +{2} 🪙"]],["^LeakCheck: пара USER \\+ PASS найдена у NPC (.*): (.*)$",["LeakCheck: USER + PASS found for NPC {1}: {2}","LeakCheck: USER + PASS encontrados para NPC {1}: {2}","LeakCheck: znaleziono USER + PASS dla NPC {1}: {2}"]],["^\\d+ · НУБ$",["2020 · NOOB","2020 · NOVATO","2020 · NOOB"]]];
+I18N_PATTERNS.push(['^(.*) · (\\d+)/(\\d+)$',['{1} · {2}/{3}','{1} · {2}/{3}','{1} · {2}/{3}']]);
+I18N_PATTERNS.push(['^NPC: (.+) \| DATA: GENERATED IN THIS BROWSER$',['NPC: {1} | DATA: CREATED IN THIS BROWSER','NPC: {1} | DATOS: CREADOS EN ESTE NAVEGADOR','NPC: {1} | DANE: UTWORZONE W TEJ PRZEGLĄDARCE']]);
+I18N_PATTERNS.push(['^● (\\d+) RECORDS$',['● {1} RECORDS','● {1} REGISTROS','● {1} WPISÓW']]);
+I18N_PATTERNS.push(...[["^Ник (.*) выбран\\. Нажми «Найти логи»\\.$", ["Nickname {1} selected. Click “Find logs”.", "Apodo {1} elegido. Pulsa «Buscar registros».", "Wybrano nick {1}. Kliknij „Znajdź logi”."]], ["^Выпал предмет: (.*)$", ["Item dropped: {1}", "Objeto obtenido: {1}", "Wylosowano: {1}"]], ["^🎒 Склад заполнен! Продай карточки в маркетплейсе\\.$", ["🎒 Storage full! Sell cards on the marketplace.", "🎒 ¡Almacén lleno! Vende cartas en el mercado.", "🎒 Magazyn pełny! Sprzedaj karty na rynku."]], ["^(.+) · LVL (\\d+)$", ["{1} · LVL {2}", "{1} · NIV {2}", "{1} · POZ {2}"]], ["^Логи: (.+)$", ["Logs: {1}", "Registros: {1}", "Logi: {1}"]], ["^🎁 Выпал предмет: (.+)$", ["🎁 Item dropped: {1}", "🎁 Objeto obtenido: {1}", "🎁 Wylosowano: {1}"]]]);
+const LOCALES=['ru','en','es','pl'];
+const LOCALE_TAGS={ru:'ru-RU',en:'en-US',es:'es-ES',pl:'pl-PL'};
+let lang=(function(){try{const value=localStorage.getItem('pgverse-language');return LOCALES.includes(value)?value:'ru'}catch{return'ru'}})();
+const originalNodes=new WeakMap();
+const originalAttributes=new WeakMap();
+function translateText(input){
+ const text=String(input);if(lang==='ru')return text;
+ const idx=LOCALES.indexOf(lang)-1;
+ if(text.includes('\n'))return text.split('\n').map(line=>translateText(line)).join('\n');
+ if(Object.prototype.hasOwnProperty.call(I18N,text))return I18N[text][idx]||text;
+ for(const [pattern,variants] of I18N_PATTERNS){const match=text.match(new RegExp(pattern));if(!match)continue;
+  return variants[idx].replace(/\{(\d+)\}/g,(_,num)=>{const v=match[+num]||'';return translateText(v)});
+ }
+ return text;
+}
+function translateUI(){
+ document.documentElement.lang=lang;
+ document.querySelector('#languageSelect').value=lang;
+ const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+ let node;
+ while((node=walker.nextNode())){if(['SCRIPT','STYLE'].includes(node.parentElement?.tagName))continue;
+  let source=originalNodes.get(node);if(source===undefined){source=node.nodeValue;originalNodes.set(node,source)}
+  const m=source.match(/^(\s*)([\s\S]*?)(\s*)$/);if(!m||!m[2])continue;
+  const converted=m[1]+translateText(m[2])+m[3];if(node.nodeValue!==converted)node.nodeValue=converted;
+ }
+ for(const el of document.querySelectorAll('[placeholder],[aria-label],[title]')){let attrs=originalAttributes.get(el);
+   if(!attrs){attrs={};for(const attr of ['placeholder','aria-label','title'])if(el.hasAttribute(attr))attrs[attr]=el.getAttribute(attr);originalAttributes.set(el,attrs)}
+   for(const [name,ru] of Object.entries(attrs))el.setAttribute(name,translateText(ru));
+ }
+}
+function setLanguage(next){if(!LOCALES.includes(next))return;lang=next;
+ try{localStorage.setItem('pgverse-language',lang)}catch{}
+ render();renderLootCatalog();renderCurrentLog();setFeedback(lastFeedback,lastFeedbackType);
+ if(modalOpen&&window.lastReward)showReward(window.lastReward.account,window.lastReward.coins);
+ $('crumb').textContent={targets:'База ников',home:'Главная',market:'Маркетплейс',upgrades:'Апгрейды',leak:'LeakCheck',collection:'Коллекция',leaderboard:'Рейтинг игроков',account:'Мой аккаунт'}[currentTab];
+ translateUI();
+}
+
+const KEY='pgverse-leakcheck-v8';
+const TIERS=[
+{name:"2020 · СТАРТЕР",key:"common",icon:"🥓",emoji:"🥓",rar:"ОБЫЧНЫЙ",chance:"~35.52%",min:65,max:130,weight:365,names:["Noob_2020", "NPC_Noob_2020", "SIM_Noob_2020"]},
+{name:"2020 · КЛАССИКА",key:"common",icon:"🧱",emoji:"🧱",rar:"ОБЫЧНЫЙ",chance:"~23.36%",min:120,max:230,weight:240,names:["BrickKid20", "NPC_BrickKid20", "SIM_BrickKid20"]},
+{name:"2019 · НОВИЧОК",key:"common",icon:"🟢",emoji:"🟢",rar:"ОБЫЧНЫЙ",chance:"~14.11%",min:200,max:370,weight:145,names:["CubeHero19", "NPC_CubeHero19", "SIM_CubeHero19"]},
+{name:"2018 · ОЛДСКУЛ",key:"uncommon",icon:"🕶️",emoji:"🕶️",rar:"НЕОБЫЧНЫЙ",chance:"~9.54%",min:300,max:550,weight:98,names:["RetroBlox18", "NPC_RetroBlox18", "SIM_RetroBlox18"]},
+{name:"2017 · РЕТРО",key:"uncommon",icon:"🎩",emoji:"🎩",rar:"НЕОБЫЧНЫЙ",chance:"~6.33%",min:470,max:850,weight:65,names:["PixelRetro17", "NPC_PixelRetro17", "SIM_PixelRetro17"]},
+{name:"2016 · КОЛЛЕКЦИОНЕР",key:"uncommon",icon:"💎",emoji:"💎",rar:"НЕОБЫЧНЫЙ",chance:"~4.09%",min:700,max:1200,weight:42,names:["Collector16", "NPC_Collector16", "SIM_Collector16"]},
+{name:"2015 · ВЕТЕРАН",key:"rare",icon:"✨",emoji:"✨",rar:"РЕДКИЙ",chance:"~2.53%",min:1100,max:1850,weight:26,names:["BloxVeteran15", "NPC_BloxVeteran15", "SIM_BloxVeteran15"]},
+{name:"2014 · КЛАССИК",key:"rare",icon:"🎧",emoji:"🎧",rar:"РЕДКИЙ",chance:"~1.56%",min:1700,max:2750,weight:16,names:["OGClassic14", "NPC_OGClassic14", "SIM_OGClassic14"]},
+{name:"2013 · БИЛДЕР",key:"rare",icon:"👑",emoji:"👑",rar:"РЕДКИЙ",chance:"~1.07%",min:2600,max:4000,weight:11,names:["RetroBuilder13", "NPC_RetroBuilder13", "SIM_RetroBuilder13"]},
+{name:"2012 · РЕЛИКВИЯ",key:"epic",icon:"🪽",emoji:"🪽",rar:"ЭПИЧЕСКИЙ",chance:"~0.78%",min:3900,max:6500,weight:8,names:["LegacyRelic12", "NPC_LegacyRelic12", "SIM_LegacyRelic12"]},
+{name:"2011 · OG",key:"epic",icon:"⚔️",emoji:"⚔️",rar:"ЭПИЧЕСКИЙ",chance:"~0.49%",min:6500,max:10500,weight:5,names:["OriginalOG11", "NPC_OriginalOG11", "SIM_OriginalOG11"]},
+{name:"2010 · ЭЛИТА",key:"epic",icon:"🟣",emoji:"🟣",rar:"ЭПИЧЕСКИЙ",chance:"~0.31%",min:9600,max:15500,weight:3.2,names:["EliteArchive10", "NPC_EliteArchive10", "SIM_EliteArchive10"]},
+{name:"2009 · АРТЕФАКТ",key:"legendary",icon:"🔥",emoji:"🔥",rar:"ЛЕГЕНДАРНЫЙ",chance:"~0.18%",min:14000,max:23000,weight:1.9,names:["AncientArtifact09", "NPC_AncientArtifact09", "SIM_AncientArtifact09"]},
+{name:"2008 · ПРОТОТИП",key:"legendary",icon:"🎃",emoji:"🎃",rar:"ЛЕГЕНДАРНЫЙ",chance:"~0.09%",min:22000,max:35000,weight:0.9,names:["Prototype08", "NPC_Prototype08", "SIM_Prototype08"]},
+{name:"2007 · ЛЕГЕНДА",key:"legendary",icon:"❄️",emoji:"❄️",rar:"ЛЕГЕНДАРНЫЙ",chance:"~0.04%",min:34000,max:57000,weight:0.45,names:["FirstLegend07", "NPC_FirstLegend07", "SIM_FirstLegend07"]},
+{name:"ADMIN//SIM · 2006",key:"mythic",icon:"👑",emoji:"👑",rar:"МИФИЧЕСКИЙ",chance:"~0.01%",min:90000,max:170000,weight:0.06,names:["SIM_ADMIN_06", "NPC_SIM_ADMIN_06", "SIM_SIM_ADMIN_06"]}
+];
+const UPGRADES=[
+{id:"core",icon:"⚡",title:"БЫСТРЫЙ ИМПОРТ",description:"Меньше ждать загрузки NPC-логов",group:"СКОРОСТЬ",effect:"speed",power:0.11,base:120,growth:1.58,max:18,label:l=>`${l} / 18`},
+{id:"luck",icon:"🍀",title:"УДАЧА",description:"Повышает редкость карточек аккаунтов",group:"ШАНС",effect:"luck",power:0.065,base:170,growth:1.65,max:20,label:l=>`${l} / 20`},
+{id:"profit",icon:"🪙",title:"МАРКЕТИНГ",description:"Больше монет при продаже лота",group:"ЭКОНОМИКА",effect:"profit",power:0.09,base:220,growth:1.61,max:16,label:l=>`${l} / 16`},
+{id:"storage",icon:"🎒",title:"СКЛАД",description:"Добавляет место для найденных карточек",group:"СКЛАД",effect:"storage",power:5,base:155,growth:1.5,max:20,label:l=>`${l} / 20`},
+{id:"chance",icon:"📡",title:"СКАНЕР ДОМЕНОВ",description:"Чаще встречаются игровые строки Roblox",group:"ШАНС",effect:"domain",power:0.024,base:290,growth:1.63,max:15,label:l=>`${l} / 15`},
+{id:"auto",icon:"🔦",title:"LOG RADAR",description:"Подсказка с номером Roblox-строки",group:"ПОДСКАЗКИ",effect:"radar",power:0,base:1500,growth:1,max:1,label:l=>`${l} / 1`},
+{id:"password",icon:"🔐",title:"ПАРОЛЬНЫЙ БОНУС",description:"Больше монет за верную пару SIM USER + PASS",group:"ЭКОНОМИКА",effect:"reward",power:0.09,base:270,growth:1.61,max:15,label:l=>`${l} / 15`},
+{id:"turbo",icon:"🚀",title:"TURBO DRIVE",description:"Ускоряет обработку игрового лога",group:"СКОРОСТЬ",effect:"speed",power:0.16,base:340,growth:1.7,max:14,label:l=>`${l} / 14`},
+{id:"ssd",icon:"💾",title:"NVME CACHE",description:"Снижает время поиска логов",group:"СКОРОСТЬ",effect:"speed",power:0.14,base:510,growth:1.72,max:12,label:l=>`${l} / 12`},
+{id:"fiber",icon:"🧵",title:"ОПТИКА",description:"Ещё быстрее загрузка NPC-записей",group:"СКОРОСТЬ",effect:"speed",power:0.11,base:830,growth:1.69,max:12,label:l=>`${l} / 12`},
+{id:"overclock",icon:"🔥",title:"OVERCLOCK",description:"Предельная скорость симуляции",group:"СКОРОСТЬ",effect:"speed",power:0.22,base:2000,growth:1.79,max:8,label:l=>`${l} / 8`},
+{id:"rareFinder",icon:"💎",title:"РАРИТЕТНЫЙ РАДАР",description:"Увеличивает шанс редких винтажных NPC",group:"ШАНС",effect:"luck",power:0.11,base:450,growth:1.78,max:16,label:l=>`${l} / 16`},
+{id:"ogChance",icon:"🎖️",title:"OG HUNTER",description:"Усиливает шанс особо старых аккаунтов",group:"ШАНС",effect:"luck",power:0.16,base:790,growth:1.8,max:13,label:l=>`${l} / 13`},
+{id:"mythic",icon:"🌠",title:"MYTHIC SIGNAL",description:"Повышает шанс легендарных карточек",group:"ШАНС",effect:"luck",power:0.2,base:1700,growth:1.81,max:10,label:l=>`${l} / 10`},
+{id:"domainBoost",icon:"🛰️",title:"DOMAIN CACHE",description:"Больше игровых roblox.com в выборке",group:"ШАНС",effect:"domain",power:0.018,base:350,growth:1.69,max:16,label:l=>`${l} / 16`},
+{id:"signal",icon:"📶",title:"SIGNAL BOOST",description:"Ещё выше вероятность Roblox-строки",group:"ШАНС",effect:"domain",power:0.022,base:730,growth:1.7,max:13,label:l=>`${l} / 13`},
+{id:"fortune",icon:"🧲",title:"МАГНИТ УДАЧИ",description:"Усиливает шанс старых аккаунтов",group:"ШАНС",effect:"luck",power:0.09,base:950,growth:1.7,max:16,label:l=>`${l} / 16`},
+{id:"negotiator",icon:"🤝",title:"ПЕРЕГОВОРЩИК",description:"Увеличивает цену продажи карточек",group:"ЭКОНОМИКА",effect:"profit",power:0.12,base:420,growth:1.72,max:16,label:l=>`${l} / 16`},
+{id:"marketExpert",icon:"📊",title:"РЫНОЧНЫЙ ЭКСПЕРТ",description:"Доплата за каждый виртуальный лот",group:"ЭКОНОМИКА",effect:"profit",power:0.17,base:1000,growth:1.74,max:12,label:l=>`${l} / 12`},
+{id:"vip",icon:"👑",title:"VIP CONTRACT",description:"Бонус к награде за проверку",group:"ЭКОНОМИКА",effect:"reward",power:0.11,base:590,growth:1.69,max:15,label:l=>`${l} / 15`},
+{id:"coinBoost",icon:"💰",title:"COIN ENGINE",description:"Повышает награды за удачный LeakCheck",group:"ЭКОНОМИКА",effect:"reward",power:0.14,base:1200,growth:1.72,max:12,label:l=>`${l} / 12`},
+{id:"warehouse",icon:"🏗️",title:"МЕГА-СКЛАД",description:"Открывает дополнительные слоты инвентаря",group:"СКЛАД",effect:"storage",power:8,base:480,growth:1.59,max:15,label:l=>`${l} / 15`},
+{id:"vault",icon:"🗄️",title:"DATA VAULT",description:"Ещё больше места под находки",group:"СКЛАД",effect:"storage",power:12,base:1300,growth:1.7,max:10,label:l=>`${l} / 10`},
+{id:"collector",icon:"🏛️",title:"МУЗЕЙ КАРТОЧЕК",description:"Расширяет коллекцию в хранилище",group:"СКЛАД",effect:"storage",power:15,base:2700,growth:1.78,max:8,label:l=>`${l} / 8`},
+{id:"mentor",icon:"📚",title:"МЕНТОР",description:"Больше опыта за успешную проверку",group:"ОПЫТ",effect:"xp",power:0.11,base:220,growth:1.6,max:18,label:l=>`${l} / 18`},
+{id:"xpBoost",icon:"⭐",title:"XP MATRIX",description:"Ускоренная прокачка уровня",group:"ОПЫТ",effect:"xp",power:0.18,base:550,growth:1.66,max:15,label:l=>`${l} / 15`},
+{id:"academy",icon:"🎓",title:"АКАДЕМИЯ",description:"Опыт за каждую успешную проверку растёт",group:"ОПЫТ",effect:"xp",power:0.24,base:1300,growth:1.78,max:12,label:l=>`${l} / 12`},
+{id:"skipBoost",icon:"⏭️",title:"БЫСТРЫЙ СКИП",description:"Дополнительные монеты за пропуск NPC",group:"СКИП",effect:"skip",power:0.22,base:170,growth:1.61,max:15,label:l=>`${l} / 15`},
+{id:"skipExpert",icon:"🏃",title:"СКИП-МАРАФОН",description:"Улучшает выплату при пропуске",group:"СКИП",effect:"skip",power:0.32,base:390,growth:1.7,max:12,label:l=>`${l} / 12`},
+{id:"skipXP",icon:"📗",title:"ОПЫТ ЗА СКИП",description:"Больше XP за пропущенные NPC",group:"СКИП",effect:"skipxp",power:0.2,base:460,growth:1.63,max:14,label:l=>`${l} / 14`},
+{id:"radarPlus",icon:"🧭",title:"РАДАР+",description:"Дополнительный шанс на игровую Roblox-строку",group:"ПОДСКАЗКИ",effect:"domain",power:0.016,base:830,growth:1.7,max:12,label:l=>`${l} / 12`},
+{id:"archiveAI",icon:"🤖",title:"ARCHIVE AI",description:"Сокращает время обработки пачки логов",group:"ПОДСКАЗКИ",effect:"speed",power:0.15,base:960,growth:1.73,max:13,label:l=>`${l} / 13`},
+{id:"professor",icon:"🧠",title:"ПРОФЕССОР NPC",description:"Больше XP за разгаданные записи",group:"ОПЫТ",effect:"xp",power:0.3,base:3200,growth:1.82,max:10,label:l=>`${l} / 10`},
+{id:"legendaryVault",icon:"🏆",title:"LEGENDARY VAULT",description:"Слоты для самых редких предметов",group:"СКЛАД",effect:"storage",power:20,base:7600,growth:1.85,max:6,label:l=>`${l} / 6`},
+{id:"luckyStreak",icon:"🍀",title:"LUCKY STREAK",description:"Больше шансов на редкость каждый уровень",group:"ШАНС",effect:"luck",power:0.22,base:4200,growth:1.85,max:8,label:l=>`${l} / 8`},
+{id:"goldRush",icon:"✨",title:"GOLD RUSH",description:"Больше выплат при продаже предметов",group:"ЭКОНОМИКА",effect:"profit",power:0.24,base:4400,growth:1.8,max:9,label:l=>`${l} / 9`}
+];
+// Iconic names are used only for fictional, in-game collectible cards.
+// No actual Roblox items, Robux, or account access are provided.
+const ROBLOX_ITEMS=[[{"name": "Bacon Hair", "img": "bacon_hair", "icon": "🥓"}, {"name": "Pal Hair", "img": "bacon_hair", "icon": "🙂"}, {"name": "Man Face", "img": "clockwork_shades", "icon": "😏"}], [{"name": "Bacon Hair", "img": "bacon_hair", "icon": "🥓"}, {"name": "Shaggy", "img": "bacon_hair", "icon": "💇"}], [{"name": "Shaggy", "img": "bacon_hair", "icon": "💇"}, {"name": "Rainbow Shaggy", "img": "rainbow_shaggy", "icon": "🌈"}], [{"name": "Classic Fedora", "img": "gold_sparkle_fedora", "icon": "🎩"}, {"name": "Clockwork Headphones", "img": "clockwork_headphones", "icon": "🎧"}], [{"name": "Clockwork Shades", "img": "clockwork_shades", "icon": "🕶️"}, {"name": "Red Sparkle Time Fedora", "img": "red_sparkle_fedora", "icon": "🎩"}], [{"name": "Rainbow Shaggy", "img": "rainbow_shaggy", "icon": "🌈"}, {"name": "Sparkle Time Fedora", "img": "gold_sparkle_fedora", "icon": "✨"}], [{"name": "Red Sparkle Time Fedora", "img": "red_sparkle_fedora", "icon": "🎩"}, {"name": "Clockwork Headphones", "img": "clockwork_headphones", "icon": "🎧"}], [{"name": "Clockwork Shades", "img": "clockwork_shades", "icon": "🕶️"}, {"name": "Gold Sparkle Time Fedora", "img": "gold_sparkle_fedora", "icon": "✨"}], [{"name": "Gold Antlers", "img": "antlers_crown", "icon": "👑"}, {"name": "Valkyrie Helm", "img": "valkyrie_helm", "icon": "🪽"}], [{"name": "Valkyrie Helm", "img": "valkyrie_helm", "icon": "🪽"}, {"name": "Ice Valkyrie", "img": "valkyrie_ice", "icon": "❄️"}], [{"name": "Ice Valkyrie", "img": "valkyrie_ice", "icon": "❄️"}, {"name": "Dominus Astra", "img": "dominus_astra", "icon": "🌌"}], [{"name": "Dominus Messor", "img": "dominus_messor", "icon": "🟢"}, {"name": "Dominus Astra", "img": "dominus_astra", "icon": "🌌"}], [{"name": "Dominus Infernus", "img": "dominus_infernus", "icon": "🔥"}, {"name": "Headless Horseman", "img": "headless_horseman", "icon": "🎃"}], [{"name": "Korblox Deathspeaker", "img": "korblox_deathspeaker", "icon": "💀"}, {"name": "Headless Horseman", "img": "headless_horseman", "icon": "🎃"}], [{"name": "Dominus Aureus", "img": "dominus_aureus", "icon": "👑"}, {"name": "Dominus Empyreus", "img": "dominus_empyreus", "icon": "🪽"}], [{"name": "Dominus Empyreus", "img": "dominus_empyreus", "icon": "👑"}, {"name": "Dominus Infernus", "img": "dominus_infernus", "icon": "🔥"}, {"name": "Dominus Frigidus", "img": "valkyrie_ice", "icon": "❄️"}]];
+
+const TIER_TRANSLATIONS={"en": ["2020 · STARTER", "2020 · CLASSIC", "2019 · ROOKIE", "2018 · OLD SCHOOL", "2017 · RETRO", "2016 · COLLECTOR", "2015 · VETERAN", "2014 · CLASSIC OG", "2013 · BUILDER", "2012 · RELIC", "2011 · OG", "2010 · ELITE", "2009 · ARTIFACT", "2008 · PROTOTYPE", "2007 · LEGEND", "ADMIN//SIM · 2006"], "es": ["2020 · INICIAL", "2020 · CLÁSICO", "2019 · NOVATO", "2018 · OLD SCHOOL", "2017 · RETRO", "2016 · COLECCIONISTA", "2015 · VETERANO", "2014 · CLÁSICO", "2013 · CONSTRUCTOR", "2012 · RELIQUIA", "2011 · OG", "2010 · ÉLITE", "2009 · ARTEFACTO", "2008 · PROTOTIPO", "2007 · LEYENDA", "ADMIN//SIM · 2006"], "pl": ["2020 · START", "2020 · KLASYK", "2019 · NOWICJUSZ", "2018 · STARA SZKOŁA", "2017 · RETRO", "2016 · KOLEKCJONER", "2015 · WETERAN", "2014 · KLASYK", "2013 · BUDOWNICZY", "2012 · RELIKT", "2011 · OG", "2010 · ELITA", "2009 · ARTEFAKT", "2008 · PROTOTYP", "2007 · LEGENDA", "ADMIN//SIM · 2006"]};
+const UPGRADE_TRANSLATIONS={"en": ["FAST IMPORT", "LUCK", "MARKETING", "STORAGE", "DOMAIN SCANNER", "LOG RADAR", "PASSWORD BONUS", "TURBO DRIVE", "NVME CACHE", "FIBER CONNECTION", "OVERCLOCK", "RARE FINDER", "OG HUNTER", "MYTHIC SIGNAL", "DOMAIN CACHE", "SIGNAL BOOST", "LUCK MAGNET", "NEGOTIATOR", "MARKET EXPERT", "VIP CONTRACT", "COIN ENGINE", "MEGA STORAGE", "DATA VAULT", "CARD MUSEUM", "MENTOR", "XP MATRIX", "ACADEMY", "QUICK SKIP", "SKIP MARATHON", "SKIP XP", "RADAR+", "ARCHIVE AI", "NPC PROFESSOR", "LEGENDARY VAULT", "LUCKY STREAK", "GOLD RUSH"], "es": ["IMPORTACIÓN RÁPIDA", "SUERTE", "MARKETING", "ALMACÉN", "ESCÁNER DE DOMINIOS", "RADAR DE LOGS", "BONO DE CONTRASEÑA", "TURBO DRIVE", "CACHÉ NVME", "FIBRA ÓPTICA", "OVERCLOCK", "BUSCADOR DE RAREZAS", "CAZADOR OG", "SEÑAL MÍTICA", "CACHÉ DE DOMINIOS", "REFUERZO DE SEÑAL", "IMÁN DE SUERTE", "NEGOCIADOR", "EXPERTO DEL MERCADO", "CONTRATO VIP", "MOTOR DE MONEDAS", "MEGA ALMACÉN", "BÓVEDA DE DATOS", "MUSEO DE CARTAS", "MENTOR", "MATRIZ XP", "ACADEMIA", "SALTO RÁPIDO", "MARATÓN DE SALTOS", "XP POR SALTAR", "RADAR+", "ARCHIVE AI", "PROFESOR NPC", "BÓVEDA LEGENDARIA", "RACHA DE SUERTE", "FIEBRE DEL ORO"], "pl": ["SZYBKI IMPORT", "SZCZĘŚCIE", "MARKETING", "MAGAZYN", "SKANER DOMEN", "RADAR LOGÓW", "BONUS HASŁA", "TURBO DRIVE", "PAMIĘĆ NVME", "ŚWIATŁOWÓD", "OVERCLOCK", "ŁOWCA RZADKOŚCI", "ŁOWCA OG", "SYGNAŁ MITYCZNY", "CACHE DOMEN", "WZMOCNIENIE SYGNAŁU", "MAGNES SZCZĘŚCIA", "NEGOCJATOR", "EKSPERT RYNKOWY", "KONTRAKT VIP", "SILNIK MONET", "MEGA MAGAZYN", "SEJF DANYCH", "MUZEUM KART", "MENTOR", "MACIERZ XP", "AKADEMIA", "SZYBKIE POMIŃ", "MARATON POMIJANIA", "XP ZA POMIJANIE", "RADAR+", "ARCHIVE AI", "PROFESOR NPC", "LEGENDARNY SEJF", "SZCZĘŚLIWA SERIA", "GORĄCZKA ZŁOTA"]};
+const UPGRADE_DESCRIPTIONS={"en": {"speed": "Makes fictional NPC logs load faster.", "luck": "Increases the chance of rare and old account cards.", "profit": "Increases coins earned when selling collectible cards.", "storage": "Adds more inventory slots for collectible cards.", "domain": "Increases chance of finding roblox.com in generated logs.", "radar": "Unlocks a hint showing the relevant log line.", "reward": "Increases coins for successful fictional USER + PASS checks.", "xp": "Earn more experience after finding a game card.", "skip": "Earn more virtual coins when skipping an NPC.", "skipxp": "Earn more experience for skipped NPCs."}, "es": {"speed": "Carga más rápido los registros ficticios de NPC.", "luck": "Aumenta la posibilidad de encontrar cartas raras y antiguas.", "profit": "Obtén más monedas al vender cartas coleccionables.", "storage": "Añade más espacios para guardar cartas.", "domain": "Aumenta la probabilidad de encontrar roblox.com en registros inventados.", "radar": "Desbloquea una pista que indica la línea correcta.", "reward": "Obtén más monedas al acertar USER + PASS ficticios.", "xp": "Gana más experiencia al encontrar cartas.", "skip": "Consigue más monedas virtuales al saltar un NPC.", "skipxp": "Gana más experiencia por saltar NPC."}, "pl": {"speed": "Przyspiesza wczytywanie fikcyjnych logów NPC.", "luck": "Zwiększa szansę na rzadkie i stare karty kont.", "profit": "Zwiększa zysk z kolekcjonerskich kart.", "storage": "Dodaje więcej miejsc w ekwipunku.", "domain": "Zwiększa szansę na roblox.com w wygenerowanych logach.", "radar": "Odblokowuje podpowiedź z numerem wiersza.", "reward": "Daje więcej monet za poprawne fikcyjne USER + PASS.", "xp": "Zdobywaj więcej doświadczenia za znalezione karty.", "skip": "Zdobądź więcej monet za pominięcie NPC.", "skipxp": "Zdobądź więcej XP za pominiętych NPC."}};
+const localizedTier=i=>lang==='ru'?TIERS[i].name:(TIER_TRANSLATIONS[lang]||[])[i]||TIERS[i].name;
+const localizedUpgradeName=u=>lang==='ru'?u.title:(UPGRADE_TRANSLATIONS[lang]||[])[UPGRADES.indexOf(u)]||u.title;
+const localizedUpgradeDesc=u=>lang==='ru'?u.description:(UPGRADE_DESCRIPTIONS[lang]||{})[u.effect]||u.description;
+
+function randomLoot(tier){const pool=ROBLOX_ITEMS[tier]||ROBLOX_ITEMS[0];return {...pool[rand(0,pool.length-1)]}}
+
+const DOMAINS=['pixelmusic.test','blockshop.test','arcadehub.test','sim-mail.test','neonstream.test','playcloud.test','buildworld.test','virtualmarket.test','gamemedia.test','cubechat.test','gamelounge.test','simvideo.test','pixelpedia.test','cloudgames.test','bloxforum.test'];
+const PREFIX=['SimBlock','NPCPixel','FakeGuest','TestBuilder','CubeHero','DemoNinja','RetroBox','SimBrick','NPCGamer','BlockScout'];
+const $=id=>document.getElementById(id);
+const fmt=n=>Math.round(n).toLocaleString(LOCALE_TAGS[lang]);
+const rand=(a,b)=>Math.floor(a+Math.random()*(b-a+1));
+const escapeHtml=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const fresh=()=>({version:8,coins:280,level:1,xp:0,runs:0,found:0,skipped:0,streak:0,recordSeq:0,targetSeq:0,sales:0,earned:0,best:-1,inventory:[],targets:[],selectedTargetId:null,upgrades:Object.fromEntries(UPGRADES.map(u=>[u.id,0])),questClaimed:[],history:[],activeLog:null});
+let state;try{let old=JSON.parse(localStorage.getItem(KEY)||localStorage.getItem('pgverse-leakcheck-v5')||localStorage.getItem('pgverse-leakcheck-v4')||'null');state=old&&typeof old==='object'?{...fresh(),...old,upgrades:{...fresh().upgrades,...old.upgrades}}:fresh()}catch{state=fresh()}
+// Convert the six old ranks to the corresponding places in the 16-rank ladder.
+if(state.version!==8){const mapping=[0,3,6,10,14,15];if(Array.isArray(state.inventory))state.inventory.forEach(a=>{a.tier=mapping[Math.min(5,Math.max(0,a.tier||0))]});state.best=state.best<0?-1:mapping[Math.min(5,Math.max(0,state.best))];state.version=8}
+if(!Array.isArray(state.targets))state.targets=[];
+if(state.activeLog && !state.activeLog.targetId)state.activeLog=null; // migrate old generic log to NPC flow
+
+if(!Array.isArray(state.inventory))state.inventory=[];
+// Keep previously earned accounts when updating from v5 and give them a Roblox loot item.
+state.inventory.forEach(a=>{if(!a.loot||!a.loot.name)a.loot=randomLoot(a.tier);else if(!a.loot.img){const match=ROBLOX_ITEMS.flat().find(x=>x.name===a.loot.name);if(match)a.loot={...a.loot,img:match.img}}});
+if(!Array.isArray(state.questClaimed))state.questClaimed=[];
+if(!Array.isArray(state.history))state.history=[];
+let currentTab='targets',modalOpen=false,isLoading=false,logTimer=null,sortMode='new';
+let onlineUser=null,serverAvailable=false,cloudSyncTimer=null,cloudBusy=false,cloudPending=false,authMode='login',activeUpgradeGroup='ВСЕ';
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch{};if(onlineUser){cloudPending=true;clearTimeout(cloudSyncTimer);cloudSyncTimer=setTimeout(saveCloud,1100)}};
+const effect=(name)=>UPGRADES.reduce((sum,u)=>sum+(u.effect===name?((Number(state.upgrades[u.id])||0)*u.power):0),0);
+const lootImg=item=>item&&item.img?'assets/'+encodeURIComponent(item.img)+'.webp':null;
+const artTag=(item)=>lootImg(item)?'<img loading="lazy" class="item-art" alt="'+escapeHtml(item.name)+'" src="'+lootImg(item)+'">':(item&&item.icon||'🎁');
+const limit=()=>Math.floor(12+effect('storage'));
+const cost=u=>Math.round(u.base*Math.pow(u.growth,state.upgrades[u.id]||0));
+const rank=()=>state.level>=30?'Кибер-легенда':state.level>=15?'LOG-МАСТЕР':state.level>=7?'Про-игрок':state.level>=3?'Скаут':'Новичок';
+const accountValue=a=>Math.round(a.base*(1+effect('profit')));
+const xpNext=()=>100+Math.floor(state.level*state.level*18);
+function record(text,emoji='⚡'){state.history.unshift({text,emoji,at:Date.now()});state.history=state.history.slice(0,10)}
+function toast(msg,warning=false){const el=document.createElement('div');el.className='toast'+(warning?' warn':'');el.textContent=translateText(msg);$('toastStack').prepend(el);setTimeout(()=>el.remove(),3500)}
+function levelXp(amount){state.xp+=amount;while(state.xp>=xpNext()){state.xp-=xpNext();state.level++;const bonus=state.level*30;state.coins+=bonus;record(`Новый уровень ${state.level}! +${fmt(bonus)} 🪙`,'⭐');toast(`⭐ Уровень ${state.level}! Бонус ${fmt(bonus)} монет.`)}}
+function createAccount(tier,name=null){const t=TIERS[tier];return{id:'SIM-'+Date.now().toString(36).toUpperCase()+'-'+rand(100,999),name:name||t.names[rand(0,t.names.length-1)]+'_'+rand(10,99),tier,base:rand(t.min,t.max),loot:randomLoot(tier),createdAt:Date.now()}}
+function rollTier(){const weights=TIERS.map((t,i)=>t.weight*Math.pow(1+Math.min(5,effect('luck'))*i/16,2));let r=Math.random()*weights.reduce((a,b)=>a+b,0);for(let i=0;i<weights.length;i++){r-=weights[i];if(r<0)return i}return 0}
+function addAccount(tier,name=null){if(state.inventory.length>=limit())return null;const account=createAccount(tier,name);state.inventory.unshift(account);state.found++;state.best=Math.max(tier,state.best);return account}
+function fakeNickname(){return PREFIX[rand(0,PREFIX.length-1)]+'_'+rand(100,99999)}
+function generateTarget(){const id='NPC-'+(++state.targetSeq);const nick=fakeNickname();return{id,nick,era:[2020,2019,2018,2017,2016,2015,2014,2013,2012,2011,2010,2009,2008,2007,2006][rand(0,14)],log:null}}
+function refillTargets(){while(state.targets.length<8)state.targets.push(generateTarget())}
+refillTargets();
+function findTargetByNick(nick){return state.targets.find(t=>t.nick.toLowerCase()===nick.toLowerCase())}
+function fakePassword(){const words=['Pixel','Orbit','Block','Quest','Retro','Cube','Vector','Brick','Arcade','Neon'];const suffix=['!','#','@','$'];return 'SIM_'+words[rand(0,words.length-1)]+rand(100,9999)+suffix[rand(0,suffix.length-1)]}
+
+function makeLog(target){
+ const seq=++state.recordSeq;
+ const hasRoblox=Math.random()<(Math.min(.88,.44+effect('domain')));
+ const count=rand(9,13);
+ const pool=DOMAINS.slice().sort(()=>Math.random()-.5);
+ const rows=Array.from({length:count},(_,i)=>({domain:pool[i],user:Math.random()<.45?target.nick:fakeNickname(),password:fakePassword()}));
+ let robloxIndex=-1;
+ if(hasRoblox){robloxIndex=rand(0,count-1);rows[robloxIndex]={domain:'roblox.com',user:Math.random()<.65?target.nick:target.nick+'_RB',password:fakePassword()}}
+ return {seq,targetId:target.id,targetNick:target.nick,rows,robloxIndex,hasRoblox};
+}
+let lastFeedback='Введи ник из базы, чтобы открыть игровые записи персонажа.',lastFeedbackType='';
+function setFeedback(text,type=''){lastFeedback=text;lastFeedbackType=type;const el=$('checkFeedback');el.className='check-feedback '+type;el.textContent=text;translateUI()}
+function renderTargets(){
+ $('targetCount').textContent=`(${state.targets.length} NPC)`;$('navTargets').textContent=state.targets.length;
+ $('targetList').innerHTML=state.targets.map((t,i)=>`<article class="target-card"><div class="npc-top"><span class="npc-tag">NPC #${String(i+1).padStart(2,'0')}</span><span class="npc-state ${t.log?'npc-scanned':''}">${t.log?'ПРОВЕРЯЛСЯ':'НЕ ПРОВЕРЕН'}</span></div><div class="npc-avatar">${['🥓','🧱','😎','🪽','🎃','👑'][i%6]}</div><h3>${escapeHtml(t.nick)}</h3><p>Игровой профиль · эпоха ${t.era}<br>Логи: ${t.log?'СОЗДАНЫ':'НЕИЗВЕСТНО'}</p><div class="npc-actions"><button class="primary" data-target="${escapeHtml(t.id)}">↳ В LEAKCHECK</button><button class="ghost" data-dismiss="${escapeHtml(t.id)}" title="Пропустить NPC без награды">⏭</button></div></article>`).join('');
+}
+function selectTarget(id){
+ if(isLoading||modalOpen)return;
+ const t=state.targets.find(x=>x.id===id);if(!t)return;
+ state.selectedTargetId=t.id;state.activeLog=null;save();
+ $('targetNickInput').value=t.nick;$('nickInput').value='';$('passInput').value='';
+ switchTab('leak');renderCurrentLog();setFeedback(`Ник ${t.nick} выбран. Нажми «Найти логи».`,'info');
+}
+function renderCurrentLog(){
+ const log=state.activeLog;
+ const t=state.targets.find(x=>x.id===state.selectedTargetId);
+ $('selectedTargetLabel').textContent=log?`● ЛОГИ NPC: ${log.targetNick} · #${log.seq}`:t?`● ВЫБРАН: ${t.nick} · Нажми «Найти логи»`:'Введите ник только из игровой базы NPC.';
+ $('logBadge').textContent=isLoading?'◉ SCANNING':log?'● READY':'● STANDBY';
+ $('logTitle').textContent=isLoading?'ПОИСК ЛОГОВ NPC':log?`STLR_SIM_${String(log.seq).padStart(5,'0')}.log · ${log.targetNick}`:'ВВЕДИ НИК ДЛЯ ПОИСКА';
+ $('logRows').textContent=log?`● ${log.rows.length} RECORDS`:'● 0 RECORDS';
+ $('logCountLabel').textContent=log?`Лог #${log.seq}`:'Ожидание';
+ $('loadTargetBtn').disabled=isLoading||modalOpen;
+ $('targetNickInput').disabled=isLoading||modalOpen;
+ $('logVerification').hidden=isLoading||!log;
+ $('verifyBtn').disabled=isLoading||!log;
+ $('nickInput').disabled=isLoading||!log;
+ $('passInput').disabled=isLoading||!log;
+ $('skipBtn').disabled=isLoading||!log;
+ $('nextLogBtn').disabled=isLoading;
+ $('hintBtn').disabled=isLoading||!log;
+ if(isLoading){$('logViewer').innerHTML='<div class="log-placeholder"><span>📡</span>Ищем сгенерированные записи выбранного NPC...</div>';translateUI();return}
+ if(!log){$('logViewer').innerHTML='<div class="log-placeholder"><span>🔐</span>Сначала введи ник NPC из базы и нажми «Найти логи».<small style="color:#7590b0">Логи будут созданы только для персонажа с таким ником.</small></div>';translateUI();return}
+ const safeRows=Array.isArray(log.rows)?log.rows:[];
+ $('logViewer').innerHTML=`<div class="sim-log-header">[ STLR_SIM // FICTIONAL NPC LOG #${String(log.seq).padStart(5,'0')} ]\nNPC: ${escapeHtml(log.targetNick)} | DATA: GENERATED IN THIS BROWSER\nИщи roblox.com, скопируй USER и PASS. Пароли начинаются на SIM_</div>`+
+ safeRows.map((r,i)=>`<div class="log-row" id="row-${i}"><div class="log-no">#${String(i+1).padStart(2,'0')}</div><div class="log-domain"><b>URL:</b> ${escapeHtml(r.domain)}</div><div class="log-user"><b>USER:</b> <span>${escapeHtml(r.user)}</span></div><div class="log-user"><b>PASS:</b> <span class="pass-text">${escapeHtml(r.password)}</span></div></div>`).join('');translateUI();
+}
+function loadTarget(){
+ if(isLoading||modalOpen)return;
+ const nick=$('targetNickInput').value.trim();
+ if(!nick){setFeedback('Сначала введи ник NPC из «Базы ников».','error');return}
+ const t=findTargetByNick(nick);
+ if(!t){setFeedback('Такого NPC нет в игровой базе. Выбери ник из списка.','error');toast('❌ Ник не найден в игровой базе NPC.',true);return}
+ state.selectedTargetId=t.id;state.activeLog=null;isLoading=true;
+ $('nickInput').value='';$('passInput').value='';setFeedback('Подготавливаем игровые логи NPC…','info');renderCurrentLog();save();
+ const duration=Math.max(110,1150/(1+effect('speed')));
+ clearTimeout(logTimer);
+ logTimer=setTimeout(()=>{
+   if(!t.log)t.log=makeLog(t);
+   state.activeLog=t.log;isLoading=false;save();renderCurrentLog();renderTargets();
+   setFeedback('Найди roblox.com, затем впиши USER и PASS из одной строки. Если сайта нет — скипни NPC.','');
+ },duration);
+}
+function discardTarget(id){state.targets=state.targets.filter(t=>t.id!==id);if(state.selectedTargetId===id){state.selectedTargetId=null;state.activeLog=null}refillTargets();save()}
+function skipCandidate(id){
+ if(modalOpen||isLoading)return;
+ const t=state.targets.find(x=>x.id===id);if(!t)return;
+ discardTarget(id);render();toast(`⏭ NPC ${t.nick} заменён без награды.`);
+}
+function verifyNick(){
+ if(isLoading||!state.activeLog||modalOpen)return;
+ const input=$('nickInput').value.trim();const password=$('passInput').value.trim();
+ if(!input||!password){setFeedback('Впиши оба поля: USER и PASS из одной строки roblox.com.','error');return}
+ const log=state.activeLog;
+ if(!log.hasRoblox){setFeedback('У этого NPC нет записи roblox.com. Нажми «Скипнуть NPC».','error');return}
+ const expected=log.rows[log.robloxIndex];
+ if(input.toLowerCase()!==expected.user.toLowerCase()){
+   setFeedback('USER не совпадает с ником в строке roblox.com.','error');toast('❌ Неверный игровой USER.',true);return;
+ }
+ if(password!==expected.password){setFeedback('PASS не совпадает. Найди пароль SIM_* в строке roblox.com.','error');toast('❌ Неверный игровой PASS.',true);return}
+ if(state.inventory.length>=limit()){setFeedback('🎒 Склад заполнен! Продай карточки в маркетплейсе.','error');toast('🎒 Нет свободных слотов.',true);return}
+ state.runs++;state.streak++;
+ const tier=rollTier();const account=addAccount(tier,expected.user);
+ account.password=expected.password;account.sourceNPC=log.targetNick;
+ const reward=Math.round((rand(35,58)+Math.min(state.streak,10)*3+state.level)*(1+effect('reward')));
+ state.coins+=reward;levelXp(Math.round(rand(40,56)*(1+effect('xp'))));
+ record(`LeakCheck: пара USER + PASS найдена у NPC ${log.targetNick}: ${account.name}`,'🔐');
+ discardTarget(log.targetId);save();render();renderCurrentLog();setFeedback('✓ Игровая пара USER + PASS найдена, карточка добавлена.','success');showReward(account,reward);
+}
+function skipLog(){
+ if(isLoading||!state.activeLog||modalOpen)return;
+ const log=state.activeLog;
+ state.runs++;state.skipped++;state.streak=0;
+ const reward=Math.round(rand(5,12)*(1+effect('skip')));state.coins+=reward;levelXp(Math.round(rand(7,12)*(1+effect('skipxp'))));
+ record(`NPC ${log.targetNick} пропущен (+${reward} 🪙)`,'⏭');
+ discardTarget(log.targetId);render();renderCurrentLog();toast(`⏭ NPC пропущен! +${reward} 🪙. Выбери следующего.`);switchTab('targets');
+}
+function hint(){
+ if(!state.upgrades.auto){toast('🔒 Купи LOG RADAR в апгрейдах.',true);switchTab('upgrades');return}
+ if(!state.activeLog||isLoading)return;
+ const log=state.activeLog;
+ if(!log.hasRoblox){setFeedback('📡 Радар: roblox.com отсутствует. Скипни NPC.','info');return}
+ const n=log.robloxIndex+1;
+ setFeedback(`📡 Roblox обнаружен в строке #${String(n).padStart(2,'0')}. Впиши USER и PASS вручную.`,'info');
+ const target=$('row-'+log.robloxIndex);if(target){target.classList.add('highlight');target.scrollIntoView({block:'nearest',behavior:'smooth'})}
+}
+function showReward(account,coins){
+ window.lastReward={account,coins};modalOpen=true;$('rewardModal').classList.add('open');const t=TIERS[account.tier];
+ $('modalEmoji').innerHTML=artTag(account.loot);$('modalEmoji').classList.toggle('has-art',!!lootImg(account.loot));$('modalTag').textContent=translateText(t.rar)+' • '+localizedTier(account.tier);
+ $('modalTag').style.color=`var(--${t.key==='legendary'?'gold':t.key==='mythic'?'pink':'cyan'})`;
+ $('modalTitle').textContent=account.name;
+ $('modalDesc').textContent=`🎁 Выпал предмет: ${account.loot.name}! Это виртуальный лут аккаунта NPC, а не реальный предмет Roblox. За проверку: +${fmt(coins)} 🪙.`;
+ $('modalPrice').textContent=`Цена карточки: ${fmt(accountValue(account))} 🪙`;
+ $('modalClose').textContent='ЗАБРАТЬ И К БАЗЕ НИКОВ';translateUI();
+}
+function closeModal(){if(!modalOpen)return;modalOpen=false;$('rewardModal').classList.remove('open');switchTab('targets')}
+function sellOne(id){const index=state.inventory.findIndex(a=>a.id===id);if(index<0)return;const [a]=state.inventory.splice(index,1);const price=accountValue(a);state.coins+=price;state.earned+=price;state.sales++;record(`Продан ${a.name} за ${fmt(price)} 🪙`,'💸');toast(`💸 Продано: ${a.name} · +${fmt(price)} 🪙`);save();render()}
+function sellAll(){if(!state.inventory.length){toast('Инвентарь пуст.',true);return}const amount=state.inventory.reduce((sum,a)=>sum+accountValue(a),0);const count=state.inventory.length;state.coins+=amount;state.earned+=amount;state.sales+=count;state.inventory=[];record(`Продано ${count} карточек за ${fmt(amount)} 🪙`,'💰');toast(`💰 Все проданы: +${fmt(amount)} 🪙`);save();render()}
+function buyUpgrade(id){const u=UPGRADES.find(x=>x.id===id);if(!u)return;const level=state.upgrades[id];if(level>=u.max)return;const price=cost(u);if(state.coins<price){toast(`🪙 Нужно ещё ${fmt(price-state.coins)} монет.`,true);return}state.coins-=price;state.upgrades[id]++;record(`Апгрейд «${u.title}» — ур. ${state.upgrades[id]}`,'🛠️');toast(`✅ ${localizedUpgradeName(u)}: уровень ${state.upgrades[id]}`);save();render()}
+function questData(){return[
+ {id:'runs',icon:'🗂️',title:'Охотник за логами',desc:'Обработай 5 виртуальных логов',value:state.runs,goal:5,award:300},
+ {id:'sales',icon:'💸',title:'Торговец',desc:'Продай 3 виртуальных аккаунта',value:state.sales,goal:3,award:420},
+ {id:'rare',icon:'💎',title:'Раритет',desc:'Найди карточку уровня 2015 или выше',value:state.best>=6?1:0,goal:1,award:600},
+ {id:'skips',icon:'⏭️',title:'Быстрый выбор',desc:'Пропусти 4 ненужных лога',value:state.skipped,goal:4,award:160}]
+}
+function claimQuest(id){const q=questData().find(x=>x.id===id);if(!q||q.value<q.goal||state.questClaimed.includes(id))return;state.questClaimed.push(id);state.coins+=q.award;record(`Квест «${q.title}»: +${q.award} 🪙`,'🏅');toast(`🏅 +${q.award} 🪙`);save();render()}
+function renderTop(){$('topCoins').textContent=fmt(state.coins);$('topLvl').textContent=state.level;$('topSlots').textContent=`${state.inventory.length}/${limit()}`;$('sidebarRank').textContent=`${rank()} · LVL ${state.level}`;$('navInv').textContent=state.inventory.length}
+function renderHome(){
+ $('mRuns').textContent=fmt(state.runs);$('mFound').textContent=fmt(state.found);$('mProfit').textContent=fmt(state.earned);$('mBest').textContent=state.best<0?'—':state.best===TIERS.length-1?'ADMIN':TIERS[state.best].name.split(' · ')[0];
+ $('tierList').innerHTML=TIERS.map((t,i)=>`<div class="tier rarity-${t.key}"><span class="tier-icon">${t.icon}</span><div><strong class="rar-text">${localizedTier(i)}</strong><small>${t.rar}</small></div><span class="odds">${t.chance}</span></div>`).join('');
+ $('quests').innerHTML=questData().map(q=>{const done=state.questClaimed.includes(q.id);return `<div class="quest"><div class="quest-ico">${q.icon}</div><div class="quest-body"><strong>${q.title}</strong><small>${q.desc} · ${Math.min(q.value,q.goal)}/${q.goal}</small><div class="progress-mini"><div style="width:${Math.min(100,q.value/q.goal*100)}%"></div></div></div><button class="ghost" data-claim="${q.id}" ${done||q.value<q.goal?'disabled':''}>${done?'✓ Взято':`+${q.award} 🪙`}</button></div>`}).join('');
+ $('feed').innerHTML=state.history.length?state.history.slice(0,5).map(h=>`<div class="feed"><span class="feed-dot">${h.emoji}</span><div class="feed-body"><strong>${escapeHtml(h.text)}</strong><small>${new Date(h.at).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})}</small></div></div>`).join(''):'<div class="empty"><span class="big">📡</span>Пока тихо. Найди первую карточку в LeakCheck!</div>';
+}
+function accountMarkup(a){const t=TIERS[a.tier],loot=a.loot||ROBLOX_ITEMS[a.tier][0];return `<article class="account-card rarity-${t.key} rar-border"><div class="acc-top"><span class="rar-label">${t.rar}</span><span style="color:#a3b4ce;font-size:10px">${t.name.split(' · ')[0]}</span></div><div class="avatar-small loot-avatar">${artTag(loot)}</div><div class="loot-caption">✦ ROBLOX ITEM DROP</div><h3 class="loot-name">${escapeHtml(loot.name)}</h3><div class="loot-owner">NPC: ${escapeHtml(a.name)}</div><div class="acc-desc">${localizedTier(a.tier)}<br>ID: ${escapeHtml(a.id)}${a.sourceNPC?'<br>Лог: '+escapeHtml(a.sourceNPC):''}</div>${a.password?`<div class="inventory-pass"><span>🔐 SIM PASS</span><code id="pass-${escapeHtml(a.id)}">••••••••••</code><button class="ghost" data-showpass="${escapeHtml(a.id)}">👁</button></div>`:''}<div class="acc-foot"><b>🪙 ${fmt(accountValue(a))}</b><button class="ghost" data-sell="${escapeHtml(a.id)}">ПРОДАТЬ</button></div></article>`}
+
+function emptyInventory(){return '<div class="empty" style="grid-column:1/-1"><span class="big">🎒</span>Инвентарь пуст.<br>Найди USER + PASS в LeakCheck и получи карточку предмета Roblox.<br><button class="secondary" data-tab="leak" style="margin-top:12px">🔎 В LEAKCHECK</button></div>'}
+function renderInventory(){
+ let items=state.inventory.slice();$('marketCount').textContent=`(${items.length}/${limit()})`;$('collectionCount').textContent=`(${items.length}/${limit()})`;
+ $('marketItems').innerHTML=items.length?items.map(accountMarkup).join(''):emptyInventory();
+ if(sortMode==='price')items.sort((a,b)=>accountValue(b)-accountValue(a));else if(sortMode==='rarity')items.sort((a,b)=>b.tier-a.tier);
+ $('collectionItems').innerHTML=items.length?items.map(accountMarkup).join(''):emptyInventory();translateUI();
+ $('sellAllBtn').disabled=!items.length;$('collectionSellAll').disabled=!items.length;
+ 
+ $('achievements').innerHTML=TIERS.map((t,i)=>`<div class="achievement ${state.best>=i?'unlocked':''}"><div class="ai">${state.best>=i?t.icon:'🔒'}</div><b>${localizedTier(i)}</b><small>${state.best>=i?'Открыто!':'Найди уровень аккаунта'}</small></div>`).join('');
+}
+function renderLootCatalog(){
+ $('lootCatalog').innerHTML=ROBLOX_ITEMS.map((pool,i)=>`<div class="loot-section rarity-${TIERS[i].key}"><div class="loot-section-head"><strong class="rar-text">${TIERS[i].rar}</strong><span>${localizedTier(i)}</span></div>${pool.map(item=>`<div class="loot-entry"><span class="loot-entry-icon">${artTag(item)}</span><span>${escapeHtml(item.name)}</span></div>`).join('')}</div>`).join('');
+}
+function renderUpgrades(){
+ const groups=['ВСЕ','СКОРОСТЬ','ШАНС','ЭКОНОМИКА','СКЛАД','ОПЫТ','СКИП','ПОДСКАЗКИ'];
+ $('upgradeFilters').innerHTML=groups.map(g=>`<button class="filter-btn ${activeUpgradeGroup===g?'active':''}" data-upgrade-filter="${g}">${g}</button>`).join('');
+ $('upgradeCount').textContent=UPGRADES.length+' '+({ru:'улучшений',en:'upgrades',es:'mejoras',pl:'ulepszeń'}[lang]||'улучшений');
+ const search=$('upgradeSearch').value.trim().toLowerCase();
+ const filtered=UPGRADES.filter(u=>(activeUpgradeGroup==='ВСЕ'||u.group===activeUpgradeGroup)&&(!search||[u.title,u.description,u.group,u.id,localizedUpgradeName(u),localizedUpgradeDesc(u)].join(' ').toLowerCase().includes(search)));
+ $('upgradeGrid').innerHTML=filtered.map(u=>{const l=state.upgrades[u.id];const max=l>=u.max;const price=cost(u);return `<article class="upgrade-card"><span class="upicon">${u.icon}</span><div class="up-group">${u.group}</div><h3>${localizedUpgradeName(u)}</h3><p>${localizedUpgradeDesc(u)}</p><div class="level-dots">${u.label(l)} · УР. ${l}/${u.max}</div><div class="upgrade-footer"><span class="price">${max?'MAX':fmt(price)+' 🪙'}</span><button class="primary" data-buy="${u.id}" ${max||price>state.coins?'disabled':''}>${max?'МАКСИМУМ':'АПГРЕЙД ↑'}</button></div></article>`}).join('')}
+function renderLeak(){
+ $('sScanned').textContent=fmt(state.runs);$('sClaimed').textContent=fmt(state.found);$('sSkipped').textContent=fmt(state.skipped);$('sStreak').textContent=fmt(state.streak);
+ $('miniTierList').innerHTML=TIERS.slice(0,4).map((t,i)=>`<div class="tier rarity-${t.key}"><span class="tier-icon">${t.icon}</span><div><strong class="rar-text">${localizedTier(i)}</strong><small>${t.rar}</small></div></div>`).join('');
+ $('hintBtn').textContent=state.upgrades.auto?'🔦 ПОДСКАЗКА':'🔒 РАДАР';
+}
+function render(){renderTop();renderHome();renderTargets();renderInventory();renderUpgrades();renderLeak();translateUI()}
+function switchTab(tab){if(!['targets','home','market','upgrades','leak','collection','leaderboard','account'].includes(tab))return;currentTab=tab;document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+tab));$('crumb').textContent={targets:'База ников',home:'Главная',market:'Маркетплейс',upgrades:'Апгрейды',leak:'LeakCheck',collection:'Коллекция',leaderboard:'Рейтинг игроков',account:'Мой аккаунт'}[tab];translateUI();if(tab==='leaderboard')loadLeaderboard();window.scrollTo({top:0,behavior:'smooth'})}
+function resetGame(){if(!window.confirm(translateText('Сбросить монеты, NPC, инвентарь, логи и апгрейды?')))return;clearTimeout(logTimer);isLoading=false;modalOpen=false;$('rewardModal').classList.remove('open');state=fresh();refillTargets();save();$('targetNickInput').value='';$('nickInput').value='';$('passInput').value='';render();renderCurrentLog();switchTab('targets');toast('♻️ Игра сброшена!')}
+document.addEventListener('click',event=>{const btn=event.target.closest('button');if(!btn||btn.disabled)return;
+ if(btn.dataset.tab){switchTab(btn.dataset.tab);return}
+ if(btn.dataset.upgradeFilter){activeUpgradeGroup=btn.dataset.upgradeFilter;renderUpgrades();translateUI();return}
+ if(btn.dataset.target){selectTarget(btn.dataset.target);return}
+ if(btn.dataset.dismiss){skipCandidate(btn.dataset.dismiss);return}
+ if(btn.dataset.showpass){const item=state.inventory.find(a=>a.id===btn.dataset.showpass);const out=btn.closest('.inventory-pass')?.querySelector('code');if(item&&out){const visible=btn.dataset.visible==='1';out.textContent=visible?'••••••••••':item.password;btn.dataset.visible=visible?'0':'1';btn.textContent=visible?'👁':'🙈'}return}
+ if(btn.dataset.buy){buyUpgrade(btn.dataset.buy);return}
+ if(btn.dataset.sell){sellOne(btn.dataset.sell);return}
+ if(btn.dataset.claim){claimQuest(btn.dataset.claim);return}
+});
+$('loadTargetBtn').addEventListener('click',loadTarget);
+$('targetNickInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();loadTarget()}});
+$('verifyBtn').addEventListener('click',verifyNick);
+$('nickInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();verifyNick()}});
+$('passInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();verifyNick()}});
+$('passVisibleBtn').addEventListener('click',()=>{const e=$('passInput');e.type=e.type==='password'?'text':'password';$('passVisibleBtn').textContent=e.type==='password'?'👁':'🙈'});
+$('skipBtn').addEventListener('click',skipLog);
+$('nextLogBtn').addEventListener('click',()=>{switchTab('targets')});
+$('hintBtn').addEventListener('click',hint);
+$('sellAllBtn').addEventListener('click',sellAll);
+$('collectionSellAll').addEventListener('click',sellAll);
+$('languageSelect').addEventListener('change',event=>setLanguage(event.target.value));
+$('upgradeSearch').addEventListener('input',()=>{renderUpgrades();translateUI()});
+$('sortSelect').addEventListener('change',e=>{sortMode=e.target.value;renderInventory()});
+$('modalClose').addEventListener('click',closeModal);
+$('rewardModal').addEventListener('click',e=>{if(e.target===$('rewardModal'))closeModal()});
+$('resetBtn').addEventListener('click',resetGame);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modalOpen)closeModal()});
+
+// Optional real multiplayer backend. No actual Roblox accounts or credentials are requested.
+const $auth=id=>document.getElementById(id);
+async function requestAPI(path,options={}){
+ const response=await fetch(path,{credentials:'same-origin',headers:{'Content-Type':'application/json'},...options});
+ const result=await response.json().catch(()=>({error:'Invalid server response'}));
+ if(!response.ok)throw new Error(result.error||'Network error');return result;
+}
+function setCloudStatus(text){$auth('cloudSaveInfo').textContent=text;translateUI()}
+function applyCloudState(progress){
+ if(!progress||typeof progress!=='object'||Array.isArray(progress))return;
+ const defaults=fresh();let merged={...defaults,...progress,version:8,upgrades:{...defaults.upgrades,...progress.upgrades}};
+ // cloud data from this game, not Roblox; only use known, valid gameplay fields
+ if(!Array.isArray(merged.inventory))merged.inventory=[];
+ if(!Array.isArray(merged.targets))merged.targets=[];
+ if(!Array.isArray(merged.history))merged.history=[];
+ if(!Array.isArray(merged.questClaimed))merged.questClaimed=[];
+ if(merged.activeLog&&!merged.activeLog.targetId)merged.activeLog=null;
+ state=merged;refillTargets();
+ try{localStorage.setItem(KEY,JSON.stringify(state))}catch{}
+ render();renderLootCatalog();renderCurrentLog();
+}
+async function saveCloud(){
+ if(!onlineUser)return;
+ if(cloudBusy){cloudPending=true;return}
+ cloudBusy=true;cloudPending=false;
+ try{await requestAPI('/api/progress',{method:'POST',body:JSON.stringify({progress:state})});setCloudStatus('Синхронизировано с облаком')}
+ catch(e){setCloudStatus('Сохранено локально · '+e.message)}
+ finally{cloudBusy=false;if(cloudPending&&onlineUser){clearTimeout(cloudSyncTimer);cloudSyncTimer=setTimeout(saveCloud,1100)}}
+}
+function renderAuthStatus(){
+ const text=serverAvailable?'Подключён к серверу':'Сервер недоступен — локальный режим';
+ for(const prefix of ['auth','lb']){
+  $auth(prefix+'Status').textContent=text;
+  $auth(prefix+'StatusDot').classList.toggle('live',serverAvailable)
+ }
+ $auth('authGuest').hidden=!!onlineUser;
+ $auth('authLogged').hidden=!onlineUser;
+ $auth('authLoggedName').textContent=onlineUser||'—';
+ $auth('onlineUserLabel').textContent=onlineUser||'PG PLAYER';
+ $auth('authSubmit').disabled=!serverAvailable;
+ $auth('lbInfo').textContent=serverAvailable?'Чтобы попасть в топ, зарегистрируйся или войди в аккаунт.':'Рейтинг работает только при размещении полного проекта с backend.';
+ translateUI();
+}
+function setAuthMode(next){authMode=next;
+ $auth('authTitle').textContent=next==='login'?'Войти в PG//VERSE':'Зарегистрироваться в PG//VERSE';
+ $auth('authSubmit').textContent=next==='login'?'ВОЙТИ':'СОЗДАТЬ АККАУНТ';
+ $auth('modeLogin').classList.toggle('primary',next==='login');$auth('modeLogin').classList.toggle('secondary',next!=='login');
+ $auth('modeRegister').classList.toggle('primary',next==='register');$auth('modeRegister').classList.toggle('secondary',next!=='register');
+ $auth('authPassword').autocomplete=next==='login'?'current-password':'new-password';translateUI();
+}
+async function checkServer(){
+ if(location.protocol==='file:'){serverAvailable=false;renderAuthStatus();return}
+ try{const me=await requestAPI('/api/me');serverAvailable=true;if(me.user){onlineUser=me.user.username;if(me.progress)applyCloudState(me.progress);else saveCloud()}}
+ catch{serverAvailable=false}
+ renderAuthStatus();if(serverAvailable)loadLeaderboard();
+}
+async function loadLeaderboard(){
+ const table=$auth('leaderTable');if(!serverAvailable){table.innerHTML='<div class="score-empty">Рейтинг работает только при размещении полного проекта с backend.</div>';translateUI();return}
+ try{
+  const data=await requestAPI('/api/leaderboard');
+  if(!data.players||!data.players.length){table.innerHTML='<div class="score-empty">Нет игроков. Стань первым!</div>';translateUI();return}
+  table.innerHTML='<div class="score-row"><div>РАНГ</div><div>Ник</div><div>НАЙДЕНО</div><div>ЗАРАБОТАНО</div><div>УРОВЕНЬ</div></div>'+data.players.map(p=>`<div class="score-row ${p.username===onlineUser?'is-me':''}"><div class="score-rank">#${p.rank}</div><div class="score-name">${escapeHtml(p.username)} ${p.username===onlineUser?'⭐':''}</div><div class="score-number">${fmt(p.found)}</div><div class="score-number">${fmt(p.earned)}</div><div class="score-number">${fmt(p.level)}</div></div>`).join('');
+ }catch(e){table.innerHTML='<div class="score-empty">'+escapeHtml(e.message)+'</div>'}
+ translateUI();
+}
+$auth('modeLogin').addEventListener('click',()=>setAuthMode('login'));
+$auth('modeRegister').addEventListener('click',()=>setAuthMode('register'));
+$auth('authForm').addEventListener('submit',async e=>{
+ e.preventDefault();if(!serverAvailable)return;
+ const username=$auth('authName').value.trim();const password=$auth('authPassword').value;
+ $auth('authSubmit').disabled=true;
+ try{
+  const data=await requestAPI('/api/auth/'+authMode,{method:'POST',body:JSON.stringify({username,password})});
+  onlineUser=data.user.username;$auth('authPassword').value='';
+  if(data.progress)applyCloudState(data.progress);else await saveCloud();
+  renderAuthStatus();loadLeaderboard();toast('✅ Вход выполнен!')
+ }catch(ex){toast('❌ '+ex.message,true)}
+ finally{$auth('authSubmit').disabled=!serverAvailable}
+});
+$auth('logoutBtn').addEventListener('click',async()=>{
+ clearTimeout(cloudSyncTimer);while(cloudBusy){await new Promise(r=>setTimeout(r,50))}await saveCloud();
+ try{await requestAPI('/api/auth/logout',{method:'POST',body:'{}'})}catch{}
+ onlineUser=null;state=fresh();refillTargets();save();render();renderCurrentLog();renderAuthStatus();loadLeaderboard();toast('До встречи!')
+});
+$auth('syncNow').addEventListener('click',()=>{saveCloud();toast('☁️ Сохранение запущено')});
+$auth('refreshLeaderboard').addEventListener('click',loadLeaderboard);
+setAuthMode('login');checkServer();
+
+renderLootCatalog();
+render();
+renderCurrentLog();
+translateUI();
+})();
+</script>
+</body>
+</html>
